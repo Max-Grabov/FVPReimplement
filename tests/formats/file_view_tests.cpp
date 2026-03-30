@@ -44,8 +44,8 @@ TEST(FileViewTest, FileReadUInt8)
 TEST(FileViewTest, FileReadUInt32)
 {
   AstralAir::Formats::View view{"./AstralAirData/voice.bin"};
-  uint64_t test_array[8] = {0x0008118, 0x00050b1b, 0x00000000, 0x000b1843,
-                           0x00009941, 0x0000000a, 0x000bb184, 0x00008ef3};
+  uint64_t test_array[8] = {0x0008118,  0x00050b1b, 0x00000000, 0x000b1843,
+                            0x00009941, 0x0000000a, 0x000bb184, 0x00008ef3};
 
   EXPECT_TRUE(view.ValidPath());
   for(uint64_t it{0}; it < 8; ++it)
@@ -72,7 +72,7 @@ TEST(FileViewTest, FileReadUInt64)
 TEST(FileViewTest, FileViewMove)
 {
   AstralAir::Formats::View view{"./CMakeLists.txt"};
-  EXPECT_TRUE(view.ValidPath());  
+  EXPECT_TRUE(view.ValidPath());
 
   AstralAir::Formats::View other(std::move(view));
   EXPECT_TRUE(other.ValidPath());
@@ -89,12 +89,11 @@ TEST(FileViewTest, FileReadString)
 
   AstralAir::Formats::View view{"./AstralAirData/test.bin"};
   EXPECT_TRUE(view.ValidPath());
-  
+
   // offset 0 size 5
   std::string read_data{view.ReadString(0, 5)};
-  for(size_t it{0}; it < 5; ++it) 
+  for(size_t it{0}; it < 5; ++it)
   {
     EXPECT_EQ(data[it], read_data[it]);
-  } 
+  }
 }
-

@@ -13,8 +13,7 @@ namespace AstralAir
 
 namespace Formats
 {
-View::View(const std::string &path)
-    : file_name_(path), file_data_(path, std::ios::binary)
+View::View(const std::string &path) : file_name_(path), file_data_(path, std::ios::binary)
 {
   byte_size_ = GetFileSize();
 }
@@ -37,15 +36,15 @@ template <typename T> T View::Read(const uint64_t offset)
 
   if(sizeof(T) * offset > byte_size_)
   {
-    std::cerr << "Requested offset will be out of bounds, requested read is byte "
-              << offset << "\n";
+    std::cerr << "Requested offset will be out of bounds, requested read is byte " << offset
+              << "\n";
     return 0;
   }
 
   if(sizeof(T) * (offset + static_cast<T>(sizeof(T))) > byte_size_)
   {
-    std::cerr << "Requested read will be out of bounds, requested read is bytes "
-              << offset << " to " << offset + sizeof(T) << "\n";
+    std::cerr << "Requested read will be out of bounds, requested read is bytes " << offset
+              << " to " << offset + sizeof(T) << "\n";
     return 0;
   }
 
@@ -72,24 +71,24 @@ std::string View::ReadString(const uint64_t offset, const uint64_t size)
   if(!ValidPath())
   {
     return "";
-  } 
+  }
 
   if(offset > byte_size_)
   {
-    std::cerr << "Requested offset will be out of bounds, requested read is byte "
-              << offset << "\n";
+    std::cerr << "Requested offset will be out of bounds, requested read is byte " << offset
+              << "\n";
     return "";
   }
 
   if(offset + size > byte_size_)
   {
-    std::cerr << "Requested read will be out of bounds, requested read is bytes "
-              << offset << " to " << offset + size << "\n";
+    std::cerr << "Requested read will be out of bounds, requested read is bytes " << offset
+              << " to " << offset + size << "\n";
     return 0;
   }
 
   // We read a char from the file into some buffer then convert to string
-  auto buffer = std::make_unique<char*>(new char[size]);
+  auto buffer = std::make_unique<char *>(new char[size]);
 
   if(!*buffer.get())
   {

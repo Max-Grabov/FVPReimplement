@@ -1,5 +1,5 @@
-#include "../../src/formats/bin.hpp"
 #include "../../src/data/data.hpp"
+#include "../../src/formats/bin.hpp"
 
 #include "gtest/gtest.h"
 
@@ -7,12 +7,12 @@
 
 TEST(BinTest, TestOpen)
 {
-  using AstralAir::Formats::BinFormat;
   using AstralAir::Data::AstralAirData;
+  using AstralAir::Formats::BinFormat;
 
   BinFormat bin("./AstralAirData/voice.bin");
 
   std::vector<AstralAirData> data{bin.OpenAndRead()};
-  
+
   std::cout << data[0].GetData() << "\n";
 }

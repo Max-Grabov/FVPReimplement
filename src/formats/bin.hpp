@@ -28,7 +28,7 @@ private:
   uint64_t index_size_;
   uint32_t data_name_size_;
   View file_view_;
-  FileType file_type_; 
+  FileType file_type_;
 
 public:
   BinFormat(const std::string &path);
