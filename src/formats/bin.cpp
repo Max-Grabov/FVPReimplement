@@ -17,7 +17,7 @@ namespace Formats
 {
 
 BinFormat::BinFormat(const std::string &path) : file_view_(path)
-{
+{ 
   // We assume the files are exactly the proper data files, there should be proper checks before
   // reading more
   count_ = file_view_.Read<uint32_t>(0);
@@ -48,17 +48,9 @@ std::vector<AstralAirData> BinFormat::OpenAndRead()
     if(filename_offset >= data_name_size_)
       return {};
 
-    // ReadString takes offsets in single bytes, so we multiply by uint32_t size to convert back
+    // ReadStringBuffer takes offsets in single bytes, so we multiply by uint32_t size to convert back
     std::vector<std::byte> buffer{file_view_.ReadStringBuffer(
-        sizeof(uint32_t) * (int_32_names_base + filename_offset), data_name_size_ - filename_offset)};
-
-    // First reverse the stream as it is inverted when reading
-    // then, rotate every 32 bytes (4 char) so xyzabcdOggS becomes OggSabcdxyz 
-//    std::reverse(name.begin(), name.end());
-//    auto end{name.end()};
-//    for(auto it{name.begin()}; it < end; it += 4)
-//      std::reverse(it, (it + 4 > end ? end : it + 4));   
-
+        sizeof(uint32_t) * (int_32_names_base + filename_offset), data_name_size_ - filename_offset)};   
     uint32_t offset{file_view_.Read<uint32_t>(file_offset + 1)};
     uint32_t data{file_view_.Read<uint32_t>(file_offset + 2)};
     data_collection.emplace_back(std::move(buffer), offset, data);

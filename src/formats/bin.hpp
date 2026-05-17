@@ -1,5 +1,6 @@
 #include "file_view.hpp"
 
+#include <bit>
 #include <cstdint>
 #include <vector>
 

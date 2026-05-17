@@ -1,8 +1,10 @@
 #include <cstddef>
 #include <cstdint>
+#include <endian.h>
 #include <fstream>
 #include <vector>
 #include <string>
+#include <bit>
 
 namespace AstralAir
 {
@@ -21,8 +23,8 @@ public:
   View &operator=(View &&) = default;
 
   const std::ifstream &GetFileStream() const;
-  template <typename T> T Read(const uint64_t);
-  std::vector<std::byte> ReadStringBuffer(const uint64_t, const uint64_t);
+  template <typename T> T Read(const uint64_t, std::endian);
+  std::vector<std::byte> ReadBuffer(const uint64_t, const uint64_t);
   uint64_t GetFileSize() const;
   bool ValidPath() const;
 

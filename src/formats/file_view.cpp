@@ -3,7 +3,6 @@
 #include <cstdint>
 #include <cstdio>
 #include <iostream>
-#include <memory>
 #include <string>
 #include <vector>
 #include <sys/stat.h>
@@ -23,6 +22,9 @@ View::~View() { file_data_.close(); }
 
 const std::ifstream &View::GetFileStream() const { return file_data_; }
 
+/* A function designed to read a a type T, the template parameter. It will read up to sizeof(T) bytes, starting at a byte offset dictated by the function parameter.
+ * This function performs no checks of endian-ness on its own. It is up to the user to determine whether the output must be in little or big endian form. 
+ */
 template <typename T> T View::Read(const uint64_t offset)
 {
   static_assert(std::is_standard_layout_v<T> && std::is_trivial_v<T>,
@@ -59,15 +61,18 @@ template <typename T> T View::Read(const uint64_t offset)
   // This must be char *, uint8_t is not guarranteed to play nice (e.g. in testing all reads were
   // returning 0)
   file_data_.read(reinterpret_cast<char *>(&data), sizeof(T));
-  file_data_.seekg(0, std::ios::beg);
+  file_data_.seekg(0, std::ios::beg); 
 
   return data;
 }
 
-// Reads a string from a file, with the amount of bytes dictated by size
-// returns an empty string if the read is over bounds by size of offset
-// Or if the file view is invalid. Returns as a std vector of std bytes
-std::vector<std::byte> View::ReadStringBuffer(const uint64_t offset, const uint64_t size)
+/* Reads a buffer from a file, with the amount of bytes dictated by size
+* returns an empty buffer if the read is over bounds by size of offset
+* Or if the file view is invalid. Returns as a std vector of std bytes
+*
+* Similar to the other read function, users can specify a strategy to use for little or big endian 
+*/
+std::vector<std::byte> View::ReadBuffer(const uint64_t offset, const uint64_t size)
 {
   if(!ValidPath())
   {
@@ -88,12 +93,12 @@ std::vector<std::byte> View::ReadStringBuffer(const uint64_t offset, const uint6
     return {};
   }
 
-  // We read a char from the file into some buffer then convert to string
-  std::vector<std::byte> buffer(size); 
-  
+  // We write into a vector buffer of bytes 
+  std::vector<std::byte> buffer(size);  
   file_data_.seekg(offset, std::ios::beg);
   file_data_.read(reinterpret_cast<char *>(buffer.data()), size); 
 
+  // RVO
   return buffer;
 }
 
