@@ -1,5 +1,5 @@
-#include "data.hpp"
 #include "bin.hpp"
+#include "data.hpp"
 
 #include "gtest/gtest.h"
 
@@ -19,7 +19,7 @@ TEST(BinTest, TestOpen)
 
   for(size_t it{0}; it < 9; ++it)
   {
-    EXPECT_EQ(static_cast<char>(data[0].GetBuffer()[it]), comparison[it]); 
+    EXPECT_EQ(static_cast<char>(data[0].GetBuffer()[it]), comparison[it]);
   }
 }
 
@@ -30,11 +30,11 @@ TEST(BinTest, TestPrint)
 
   BinFormat bin("./AstralAirData/voice.bin");
 
-  std::vector<AstralAirData> data{bin.OpenAndRead()}; 
+  std::vector<AstralAirData> data{bin.OpenAndRead()};
   long index{};
   for(const auto &d : data)
   {
     std::cout << index++ << "\n";
-    std::cout << d.GetBuffer().size() << "\n"; 
+    std::cout << d.GetBuffer().size() << "\n";
   }
 }
