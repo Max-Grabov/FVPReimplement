@@ -65,7 +65,7 @@ BinFormat::Entry BinFormat::QueryEntry(const EntryName &name) const { return dat
 std::vector<std::byte> BinFormat::GetChunk(const EntryName &name, const uint32_t amount)
 {
   Entry entry_data = QueryEntry(name);
-  return file_view_.Read(entry_data.offset, (amount >= 0 ? entry_data.size : amount));
+  return file_view_.Read(entry_data.offset, (amount <= 0 ? entry_data.size : amount));
 }
 
 } // namespace Formats
