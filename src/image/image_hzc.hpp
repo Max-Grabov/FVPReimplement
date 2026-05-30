@@ -24,7 +24,7 @@ private:
     uint16_t offset_y;
     uint32_t unpacked_size;
     uint32_t header_size; 
-  };  
+  };   
 
 public:
   template<typename T> requires std::convertible_to<std::vector<std::byte>, T>
@@ -32,5 +32,7 @@ public:
   
   void OpenAndReadMetaData();
 };
+
+
 }
 }
