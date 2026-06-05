@@ -16,7 +16,7 @@ add_library(Audio
 )
 
 add_library(Image
-  ${IMAGE_SRC}/image_hzc.cpp
+  ${IMAGE_SRC}/hzc_stream.cpp
 )
 
 target_include_directories(Formats PUBLIC  

@@ -4,10 +4,13 @@
 #include <bit>
 #include <cstddef>
 #include <cstring>
-#include <iostream>
+#include <concepts>
 #include <stdexcept>
 #include <type_traits>
 #include <vector>
+
+template<typename T>
+concept Gettable = std::is_standard_layout_v<T> && std::is_trivial_v<T>; 
 
 namespace AstralAir
 {
@@ -15,11 +18,8 @@ namespace AstralAir
 namespace Utility
 {
 
-template <typename T> T Get(const std::vector<std::byte> &stream, size_t offset)
+template <Gettable T> T Get(const std::vector<std::byte> &stream, size_t offset)
 {
-  static_assert(std::is_standard_layout_v<T> && std::is_trivial_v<T>,
-                "Type can't be reinterpret casted");
-
   if(offset > stream.size())
   {
     throw std::runtime_error("Offset is larger than size");
