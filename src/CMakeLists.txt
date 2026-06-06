@@ -55,9 +55,18 @@ if(${USE_SDL3})
   FetchContent_MakeAvailable(sdl3) 
 endif()
 
+FetchContent_Declare(
+  ZStr
+  GIT_REPOSITORY    https://github.com/mateidavid/zstr 
+  GIT_TAG           master
+)
+FetchContent_MakeAvailable(ZStr) 
+
 FetchContent_MakeAvailable(vorbis)
 
 target_link_libraries(Audio PRIVATE vorbis)
+
+target_link_libraries(Image PRIVATE zstr::zstr)
 
 if(${USE_SDL3}) 
   # Maybe find a way to link to only audio? TODO

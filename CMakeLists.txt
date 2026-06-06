@@ -12,7 +12,7 @@ add_subdirectory(src)
 
 add_executable(AstralAir main.cpp)
 
-target_link_libraries(AstralAir PRIVATE Audio Formats)
+target_link_libraries(AstralAir PRIVATE Audio Formats Image)
 
 if(${BUILD_TESTS})
   add_subdirectory(tests)

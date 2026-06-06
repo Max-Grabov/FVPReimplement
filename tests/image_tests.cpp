@@ -1,7 +1,5 @@
 #include "bin.hpp"
-#include "binary_stream_util.hpp"
 #include "hzc_stream.hpp"
-#include "image.hpp"
 #include "gtest/gtest.h"
 
 #include <cstddef>
@@ -23,7 +21,6 @@ TEST(HZC_StreamTest, TestConstruct)
       g_view.Read(8 + g_view.Read<uint32_t>(0) * 12 + g_view.Read<uint32_t>(8), 9);
 
   std::vector<std::byte> data = bin.GetChunk(query);
-  AstralAir::Utility::PrintAsString(data);
   EXPECT_TRUE(HZC_Stream::Construct(std::move(data)));
 
   std::vector<std::byte> junk = g_view.Read(2, 9);
@@ -47,7 +44,6 @@ TEST(HZC_StreamTest, TestGetImage)
   std::optional<HZC_Stream> hzc = HZC_Stream::Construct(std::move(data));
   if(hzc.has_value())
   {
-    Image img = hzc.value().GetImage();
-    std::cout << img.meta_data_.height * img.meta_data_.width << "\n";
+    hzc.value().PrintImageMetaData();
   }
 }
