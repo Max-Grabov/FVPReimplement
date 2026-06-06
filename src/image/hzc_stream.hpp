@@ -101,10 +101,9 @@ public:
   inline void PrintImageMetaData() { image_.PrintImageMetaData(); }
   inline std::shared_ptr<char> GetImage()
   {
-    constexpr size_t size = 1 << 10;
+    size_t size = image_.meta_data_.unpacked_size;
     std::shared_ptr<char> buf(new char[size]);
-    image_.stream_.get()->read(buf.get(), image_.meta_data_.unpacked_size -
-                                              image_.meta_data_.header_size - 12);
+    image_.stream_.get()->read(buf.get(), size);
     return buf;
   }
 };

@@ -63,8 +63,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
   if(hzc.has_value())
   {
     // Needs to be refactored into free function for texture creation
-    texture_image = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGR24, SDL_TEXTUREACCESS_STATIC, 1280, 2048);
-    SDL_UpdateTexture(texture_image, nullptr, reinterpret_cast<const void *>(hzc.value().GetImage().get()), 3 * 1280);
+    texture_image = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGR24, SDL_TEXTUREACCESS_STATIC, 2048, 1280);
+    SDL_UpdateTexture(texture_image, nullptr, reinterpret_cast<const void *>(hzc.value().GetImage().get()), 3 * 2048);
   } 
   SDL_ResumeAudioStreamDevice(bgm_stream);
 
