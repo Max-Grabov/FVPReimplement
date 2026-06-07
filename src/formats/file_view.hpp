@@ -2,7 +2,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <endian.h>
 #include <fstream>
 #include <functional>
 #include <string>
