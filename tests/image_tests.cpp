@@ -54,7 +54,7 @@ TEST(HZC_StreamTest, TestGetImage)
   std::vector<std::byte> bg_query =
       bg_view.Read(8 + bg_view.Read<uint32_t>(0) * 12 + bg_view.Read<uint32_t>(8), 9);
   std::vector<std::byte> bs_query =
-      bs_view.Read(8 + bs_view.Read<uint32_t>(0) * 12 + bs_view.Read<uint32_t>(8), 9);
+      bs_view.Read(8 + bs_view.Read<uint32_t>(0) * 12 + bs_view.Read<uint32_t>(8), 17);
   
   std::vector<std::byte> vis_data = vis_bin.GetChunk(vis_query);
   std::vector<std::byte> sd_data = sd_bin.GetChunk(sd_query);

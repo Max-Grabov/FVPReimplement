@@ -15,6 +15,11 @@ namespace Formats
 
 class View
 {
+private:
+  uint64_t byte_size_;
+  std::string file_name_;
+  std::ifstream file_data_;
+
 public:
   View(const std::string &);
   ~View();
@@ -30,11 +35,6 @@ public:
                               const std::function<void(std::vector<std::byte> &)> & = nullptr);
   uint64_t GetFileSize() const;
   bool ValidPath() const;
-
-private:
-  uint64_t byte_size_;
-  std::string file_name_;
-  std::ifstream file_data_;
 };
 
 } // namespace Formats

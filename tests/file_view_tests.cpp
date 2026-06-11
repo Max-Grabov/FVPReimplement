@@ -1,3 +1,4 @@
+#include "binary_stream_util.hpp"
 #include "file_view.hpp"
 
 #include "gtest/gtest.h"
@@ -30,11 +31,11 @@ TEST(FileViewTest, FileSizeRead)
 TEST(FileViewTest, FileReadUInt8)
 {
   AstralAir::Formats::View view{"./AstralAirData/voice.bin"};
-  uint64_t test_array[8] = {0b00011000, 0b10000001, 0b00000000, 0b00000000,
+  uint8_t test_array[8] = {0b00011000, 0b10000001, 0b00000000, 0b00000000,
                             0b00011011, 0b00001011, 0b00000101, 0b00000000};
 
   EXPECT_TRUE(view.ValidPath());
-  for(uint64_t it{0}; it < 8; ++it)
+  for(uint8_t it{0}; it < 8; ++it)
   {
     EXPECT_EQ(view.Read<uint8_t>(it), test_array[it]);
   }
@@ -45,13 +46,14 @@ TEST(FileViewTest, FileReadUInt32)
   AstralAir::Formats::View view{"./AstralAirData/voice.bin"};
   /*0x18810000  0x1b0b0500*/
 
-  uint64_t test_array[8] = {0x18810000, 0x1b0b0500, 0x00000000, 0x43180b00,
+  uint32_t test_array[8] = {0x18810000, 0x1b0b0500, 0x00000000, 0x43180b00,
                             0x41990000, 0x0a000000, 0x84b10b00, 0xf38e0000};
 
   EXPECT_TRUE(view.ValidPath());
-  for(uint64_t it{0}; it < 8; ++it)
+  for(uint32_t it{0}; it < 8; ++it)
   {
-    EXPECT_EQ(view.Read<uint32_t>(it), test_array[it]);
+    AstralAir::Utility::ConvertToEndian<std::endian::little>(test_array[it]);
+    EXPECT_EQ(view.Read<uint32_t>(it * sizeof(uint32_t)), test_array[it]);
   }
 }
 
@@ -66,7 +68,7 @@ TEST(FileViewTest, FileReadUInt64)
 
   for(uint64_t it{0}; it < 8; ++it)
   {
-    EXPECT_EQ(view.Read<uint64_t>(it), test_array[it]);
+    EXPECT_EQ(view.Read<uint64_t>(it * sizeof(uint64_t)), test_array[it]);
   }
 }
 
