@@ -53,6 +53,12 @@ template <std::endian E, EndianSwappable T> void ConvertToEndian(T &value)
                reinterpret_cast<std::byte *>(&value) + sizeof(T));
 }
 
+template <std::endian E, EndianSwappable T> T ConvertToEndian(T &&value)
+{
+  std::reverse(reinterpret_cast<std::byte *>(&value),
+               reinterpret_cast<std::byte *>(&value) + sizeof(T));
+}
+
 inline void PrintAsString(const std::vector<std::byte> &stream)
 {
   for(const auto &b : stream)

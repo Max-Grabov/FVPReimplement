@@ -35,8 +35,8 @@ std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
     return std::nullopt;
   }
 
-  uint32_t id{Utility::Get<uint32_t>(input_buffer, 0)};
-  Utility::ConvertToEndian<std::endian::little>(id);
+  uint32_t id{Utility::ConvertToEndian<std::endian::little>(
+                Utility::Get<uint32_t>(input_buffer, 0))};
   if(id != 0x52494646)
   {
     return std::nullopt;
@@ -48,16 +48,15 @@ std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
     return std::nullopt;
   }
 
-  uint32_t format{Utility::Get<uint32_t>(input_buffer, 8)};
-  Utility::ConvertToEndian<std::endian::little>(format);
+  uint32_t format{Utility::ConvertToEndian<std::endian::little>(
+                    Utility::Get<uint32_t>(input_buffer, 8))};
   if(format != 0x57415645)
   {
     return std::nullopt;
   }
 
   // fmt sub chunk
-  uint32_t fmt_format{Utility::Get<uint32_t>(input_buffer, 12)};
-  Utility::ConvertToEndian<std::endian::little>(fmt_format);
+  uint32_t fmt_format{Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 12))};
   if(fmt_format != 0x666d7420)
   {
     return std::nullopt;
@@ -85,23 +84,20 @@ std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
   }
 
   // data sub chunk
-  uint32_t data_id{Utility::Get<uint32_t>(input_buffer, 36)};
-  Utility::ConvertToEndian<std::endian::little>(data_id);
+  uint32_t data_id{Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 36))};
   if(data_id != 0x4C495354)
   {
     return std::nullopt;
   }
 
-  uint32_t pad_string{Utility::Get<uint32_t>(input_buffer, 110)};
-  Utility::ConvertToEndian<std::endian::little>(pad_string);
+  uint32_t pad_string{Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 110))};
   if(pad_string != 0x50414420)
   {
     return std::nullopt;
   }
 
   uint32_t pad_value{Utility::Get<uint32_t>(input_buffer, 114)};
-  uint32_t data_string{Utility::Get<uint32_t>(input_buffer, 118 + pad_value)};
-  Utility::ConvertToEndian<std::endian::little>(data_string);
+  uint32_t data_string{Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 118 + pad_value))};
   if(data_string != 0x64617461)
   {
     return std::nullopt;
