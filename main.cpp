@@ -32,13 +32,11 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
   renderer = SDL_CreateRenderer(window, NULL);
 
   AstralAir::Formats::BinFormat bgm_bin("./AstralAirData/bgm.bin");
-  AstralAir::Formats::BinFormat voice_bin("./AstralAirData/voice.bin");
   AstralAir::Formats::BinFormat bg_vis_bin("./AstralAirData/graph_vis.bin");
   AstralAir::Formats::BinFormat bg_bin("./AstralAirData/graph_bg.bin");
   AstralAir::Formats::BinFormat sys_bin("./AstralAirData/se_sys.bin");
  
   bgm_bin.OpenAndRead();
-  voice_bin.OpenAndRead();
   bg_vis_bin.OpenAndRead();
   bg_bin.OpenAndRead();
   sys_bin.OpenAndRead();
