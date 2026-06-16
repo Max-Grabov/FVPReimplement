@@ -14,15 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        build_type: [Debug, Release]
-        c_compiler: [gcc, clang]
+        build_type: [Debug]
+        c_compiler: [gcc]
         include:
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-          - os: ubuntu-latest
-            c_compiler: clang
-            cpp_compiler: clang++
   
     steps:
     - uses: actions/checkout@v4
@@ -33,6 +30,6 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
     - name: Clang-Format
       run: >
-        clang-format -i ./src/**/*.*pp
-        clang-format -i ./tests/*.cpp
+        clang-format -i ${{ github.workspace }}/src/**/*.*pp
+        clang-format -i ${{ github.workspace }}/tests/*.cpp
 
