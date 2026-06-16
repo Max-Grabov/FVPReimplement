@@ -21,9 +21,10 @@ TEST(AudioTest, DecodeTest)
       voice_view.Read(8 + voice_view.Read<uint32_t>(0) * 12 + voice_view.Read<uint32_t>(8), 9);
 
   auto result = bin.GetChunk(query);
-  AudioStream stream = DecodeOggContainer(result);
-  EXPECT_EQ(stream.GetChannels(), 1);
-  EXPECT_EQ(stream.GetRate(), 48000);
+  std::optional<AudioStream> stream = DecodeOggContainer(result);
+  EXPECT_TRUE(stream);
+  EXPECT_EQ(stream.value().GetChannels(), 1);
+  EXPECT_EQ(stream.value().GetRate(), 48000);
 }
 
 TEST(AudioTest, WAVDecodeTest)

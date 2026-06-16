@@ -13,7 +13,7 @@ namespace Audio
 
 std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&);
 
-AudioStream DecodeOggContainer(const std::vector<std::byte> &);
+std::optional<AudioStream> DecodeOggContainer(const std::vector<std::byte> &);
 
 } // namespace Audio
 } // namespace AstralAir

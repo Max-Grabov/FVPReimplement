@@ -59,7 +59,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
       se_sys_view.Read(8 + se_sys_view.Read<uint32_t>(0) * 12 + se_sys_view.Read<uint32_t>(8), 3);
   
 
-  auto bgm_data_stream = AstralAir::Audio::DecodeOggContainer(bgm_bin.GetChunk(query));
+  std::optional<AstralAir::Audio::AudioStream> bgm_data_stream = AstralAir::Audio::DecodeOggContainer(bgm_bin.GetChunk(query));
   std::optional<AstralAir::Audio::AudioStream> sys_stream = AstralAir::Audio::DecodeWAV(sys_bin.GetChunk(sys_query));
   
   if(!SDL_Init(SDL_INIT_AUDIO))
@@ -68,8 +68,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     return SDL_APP_FAILURE;
   }
   
-  bgm_stream = AstralAir::Audio::CreateAudioStream(bgm_data_stream);
-  g_bgm_data_stream = bgm_data_stream;
+  bgm_stream = AstralAir::Audio::CreateAudioStream(bgm_data_stream.value());
+  g_bgm_data_stream = bgm_data_stream.value();
   se_stream = AstralAir::Audio::CreateAudioStream(sys_stream.value());
   g_se_data_stream = sys_stream.value();
 
