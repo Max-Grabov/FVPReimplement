@@ -9,11 +9,6 @@
 namespace AstralAir
 {
 
-namespace Data
-{
-class AstralAirData;
-}
-
 namespace Formats
 {
 
@@ -33,7 +28,7 @@ private:
 
 public:
   explicit BinFormat(const std::string &path);
-  virtual ~BinFormat() = default;
+  ~BinFormat() = default;
   BinFormat(const BinFormat &other) = delete;
   BinFormat(BinFormat &&other) = default;
   BinFormat &operator=(const BinFormat &other) = delete;

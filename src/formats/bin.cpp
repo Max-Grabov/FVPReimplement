@@ -22,9 +22,9 @@ size_t BinFormat::CollectionSize() const { return data_collection_.size(); }
 
 void BinFormat::OpenAndRead()
 {
-  uint32_t count = file_view_.Read<uint32_t>(0);
-  uint32_t index_size = count * 12;
-  uint32_t name_index_size = file_view_.Read<uint32_t>(4);
+  uint32_t count{file_view_.Read<uint32_t>(0)};
+  uint32_t index_size{count * 12};
+  uint32_t name_index_size{file_view_.Read<uint32_t>(4)};
   uint32_t file_offset{8};
   uint32_t filename_offset{file_view_.Read<uint32_t>(file_offset)};
   uint64_t names_base_position{file_offset + index_size};
