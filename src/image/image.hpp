@@ -1,14 +1,14 @@
 #pragma once
 
-#include <vector>
 #include <cstdint>
+#include <vector>
 
 namespace AstralAir
 {
 
 namespace Image
 {
-  
+
 class Image
 {
 private:
@@ -28,10 +28,10 @@ private:
 
 public:
   Image(const ImageMetaData &, std::vector<char> &&);
-  void PrintImageMetaData() const; 
-  
-  const ImageMetaData &GetMetaData() const; 
+  void PrintImageMetaData() const;
+
+  const ImageMetaData &GetMetaData() const;
   const std::vector<char> &GetPixels() const;
 };
-}
-}
+} // namespace Image
+} // namespace AstralAir

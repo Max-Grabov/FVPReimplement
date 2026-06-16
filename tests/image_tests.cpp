@@ -16,15 +16,15 @@ TEST(StreamTest, TestGetImage)
 
   BinFormat vis_bin("./AstralAirData/graph_vis.bin");
   vis_bin.OpenAndRead();
-  BinFormat sd_bin("./AstralAirData/graph_sd.bin"); 
-  sd_bin.OpenAndRead(); 
+  BinFormat sd_bin("./AstralAirData/graph_sd.bin");
+  sd_bin.OpenAndRead();
   BinFormat bg_bin("./AstralAirData/graph_bg.bin");
   bg_bin.OpenAndRead();
   BinFormat bs_bin("./AstralAirData/graph_bs.bin");
   bs_bin.OpenAndRead();
   BinFormat g_bin("./AstralAirData/graph.bin");
   g_bin.OpenAndRead();
-  
+
   View vis_view("./AstralAirData/graph_vis.bin");
   View sd_view("./AstralAirData/graph_sd.bin");
   View bg_view("./AstralAirData/graph_bg.bin");
@@ -41,14 +41,14 @@ TEST(StreamTest, TestGetImage)
       bs_view.Read(8 + bs_view.Read<uint32_t>(0) * 12 + bs_view.Read<uint32_t>(8), 17);
   std::vector<std::byte> g_query =
       g_view.Read(8 + g_view.Read<uint32_t>(0) * 12 + g_view.Read<uint32_t>(8), 8);
-  
+
   std::vector<std::byte> vis_data = vis_bin.GetChunk(vis_query);
   std::vector<std::byte> sd_data = sd_bin.GetChunk(sd_query);
   std::vector<std::byte> bg_data = bg_bin.GetChunk(bg_query);
   std::vector<std::byte> bs_data = bs_bin.GetChunk(bs_query);
   std::vector<std::byte> g_data = g_bin.GetChunk(g_query);
 
-  std::optional<Image> vis_hzc = CreateImage(std::move(vis_data)); 
+  std::optional<Image> vis_hzc = CreateImage(std::move(vis_data));
   std::optional<Image> sd_hzc = CreateImage(std::move(sd_data));
   std::optional<Image> bg_hzc = CreateImage(std::move(bg_data));
   std::optional<Image> bs_hzc = CreateImage(std::move(bs_data));

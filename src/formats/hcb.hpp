@@ -25,7 +25,7 @@ public:
   HcbFormat(const HcbFormat &other) = delete;
   HcbFormat(HcbFormat &&other) = default;
   HcbFormat &operator=(const HcbFormat &other) = delete;
-  HcbFormat &operator=(HcbFormat &&other) = default; 
+  HcbFormat &operator=(HcbFormat &&other) = default;
 
   void OpenAndRead();
 };

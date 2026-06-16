@@ -23,16 +23,17 @@ namespace AstralAir
 namespace Audio
 {
 
-/* Returns an AudioStream if the stream successfully passes the checks necessary to be a WAV format, otherwise returns a null optional.
- * This function will invalidate the input_buffer as it will be moved to the new audio stream.
+/* Returns an AudioStream if the stream successfully passes the checks necessary to be a WAV format,
+ * otherwise returns a null optional. This function will invalidate the input_buffer as it will be
+ * moved to the new audio stream.
  */
 std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
 {
   // RIFF Chunk
   if(input_buffer.size() < 44)
   {
-    return std::nullopt;      
-  }    
+    return std::nullopt;
+  }
 
   uint32_t id{Utility::Get<uint32_t>(input_buffer, 0)};
   Utility::ConvertToEndian<std::endian::little>(id);
@@ -56,13 +57,13 @@ std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
 
   // fmt sub chunk
   uint32_t fmt_format{Utility::Get<uint32_t>(input_buffer, 12)};
-  Utility::ConvertToEndian<std::endian::little>(fmt_format); 
+  Utility::ConvertToEndian<std::endian::little>(fmt_format);
   if(fmt_format != 0x666d7420)
   {
     return std::nullopt;
   }
 
-  uint32_t fmt_chunk_size{Utility::Get<uint32_t>(input_buffer, 16)}; 
+  uint32_t fmt_chunk_size{Utility::Get<uint32_t>(input_buffer, 16)};
   if(fmt_chunk_size != 0x00000010)
   {
     return std::nullopt;
@@ -89,10 +90,10 @@ std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
   if(data_id != 0x4C495354)
   {
     return std::nullopt;
-  } 
+  }
 
   uint32_t pad_string{Utility::Get<uint32_t>(input_buffer, 110)};
-  Utility::ConvertToEndian<std::endian::little>(pad_string); 
+  Utility::ConvertToEndian<std::endian::little>(pad_string);
   if(pad_string != 0x50414420)
   {
     return std::nullopt;
@@ -104,12 +105,13 @@ std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
   if(data_string != 0x64617461)
   {
     return std::nullopt;
-  }  
-  
-  uint32_t data_size{Utility::Get<uint32_t>(input_buffer, 118 + pad_value + 4)}; 
+  }
+
+  uint32_t data_size{Utility::Get<uint32_t>(input_buffer, 118 + pad_value + 4)};
   std::vector<float> pcm(data_size);
 
-  std::memcpy(pcm.data(), input_buffer.data() + 118 + pad_value + 4 + 4, input_buffer.size() - 118 - pad_value - 4 - 4);
+  std::memcpy(pcm.data(), input_buffer.data() + 118 + pad_value + 4 + 4,
+              input_buffer.size() - 118 - pad_value - 4 - 4);
 
   return AudioStream(std::move(pcm), channels, rate);
 }
@@ -130,7 +132,7 @@ std::optional<AudioStream> DecodeOggContainer(const std::vector<std::byte> &inpu
   if(input_buffer.size() == 0)
   {
     std::cerr << "Input stream for decoding is empty\n";
-    return std::nullopt; 
+    return std::nullopt;
   }
 
   long byte_size = input_buffer.size();

@@ -32,7 +32,7 @@ TEST(FileViewTest, FileReadUInt8)
 {
   AstralAir::Formats::View view{"./AstralAirData/voice.bin"};
   uint8_t test_array[8] = {0b00011000, 0b10000001, 0b00000000, 0b00000000,
-                            0b00011011, 0b00001011, 0b00000101, 0b00000000};
+                           0b00011011, 0b00001011, 0b00000101, 0b00000000};
 
   EXPECT_TRUE(view.ValidPath());
   for(uint8_t it{0}; it < 8; ++it)

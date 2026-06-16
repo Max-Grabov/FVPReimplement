@@ -4,9 +4,9 @@
 
 #include "zstr.hpp"
 
-#include <vector>
 #include <memory>
 #include <optional>
+#include <vector>
 
 namespace AstralAir
 {
@@ -29,16 +29,13 @@ std::optional<Image> CreateImage(std::vector<std::byte> &&stream)
     return std::nullopt;
   }
 
-  // At the position 12 + header_size is where the zlib header is located, this must be divisible by 31 and is stored as a little endian
-  // 78 01
-  // 78 5E
-  // 78 9C
-  // 78 DA
+  // At the position 12 + header_size is where the zlib header is located, this must be divisible by
+  // 31 and is stored as a little endian 78 01 78 5E 78 9C 78 DA
   uint16_t zlib_header{Utility::Get<uint16_t>(stream, Utility::Get<uint32_t>(stream, 8) + 12)};
   Utility::ConvertToEndian<std::endian::little, uint16_t>(zlib_header);
   if((zlib_header % 31) != 0)
   {
-    return std::nullopt; 
+    return std::nullopt;
   }
   // Metadata Information
   uint32_t unpacked_size = Utility::Get<uint32_t>(stream, 4);
@@ -50,15 +47,16 @@ std::optional<Image> CreateImage(std::vector<std::byte> &&stream)
   uint16_t offset_y = Utility::Get<uint16_t>(stream, 26);
   uint16_t bpp = 0 == type ? 24 : type > 2 ? 8 : 32;
   uint32_t position{12 + header_size};
- 
+
   auto view = std::make_unique<ImageBuf>(reinterpret_cast<char *>(stream.data()) + position,
-                                     reinterpret_cast<char *>(stream.data()) + stream.size());
+                                         reinterpret_cast<char *>(stream.data()) + stream.size());
   auto z_stream = std::make_unique<zstr::istream>(view.get());
 
   std::vector<char> pixels(unpacked_size);
 
   z_stream->read(pixels.data(), unpacked_size);
-  return Image({type, width, height, offset_x, offset_y, bpp, unpacked_size, header_size}, std::move(pixels));
+  return Image({type, width, height, offset_x, offset_y, bpp, unpacked_size, header_size},
+               std::move(pixels));
 }
-}
-}
+} // namespace Image
+} // namespace AstralAir

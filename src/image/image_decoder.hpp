@@ -1,10 +1,10 @@
 #pragma once
 #include "image.hpp"
 
-#include <vector>
 #include <cstddef>
 #include <optional>
 #include <streambuf>
+#include <vector>
 
 namespace AstralAir
 {
@@ -21,5 +21,5 @@ public:
 
 std::optional<Image> CreateImage(std::vector<std::byte> &&stream);
 
-}
-}
+} // namespace Image
+} // namespace AstralAir
