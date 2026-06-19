@@ -133,7 +133,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_RenderClear(renderer);
     SDL_RenderTexture(renderer, texture_bg, nullptr, nullptr);
     SDL_RenderPresent(renderer);
-    AstralAir::Audio::PlayAudio(bgm_stream, g_bgm_data_stream);
+    AstralAir::Audio::PlayAudio(se_stream, g_se_data_stream);
     played = true;
   }
 
