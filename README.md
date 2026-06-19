@@ -16,11 +16,18 @@ As part of the configuration step, cmake fetches the following dependencies
 In addition to these libraries, it is also a requirement that the game files are present when running the program. How you get this are up to you - Support the studio :)
 #### Configuring & Compiling
 Run:
+
 `cmake -S . -B <desired-output-folder>`
+
 For test configuration:
+
 `cmake -S . -B <desired-output-folder> -DBUILD_TESTS=ON`
+
 Then:
+
 `cmake --build <desired-output-folder>`
+
 After compilation, simply run
+
 `./<desired-output-folder>/AstralAir`
 
