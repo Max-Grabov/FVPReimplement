@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <bit>
 #include <concepts>
+#include <span>
 #include <cstddef>
 #include <cstring>
 #include <iostream>
@@ -22,7 +23,7 @@ namespace AstralAir
 namespace Utility
 {
 
-template <Gettable T> T Get(const std::vector<std::byte> &stream, size_t offset)
+template <Gettable T> T Get(const std::span<std::byte> &stream, size_t offset)
 {
   if(offset > stream.size())
   {
@@ -40,7 +41,7 @@ template <Gettable T> T Get(const std::vector<std::byte> &stream, size_t offset)
   return data;
 }
 
-template <std::endian E> void ConvertToEndian(std::vector<std::byte> &stream)
+template <std::endian E> void ConvertToEndian(std::span<std::byte> &stream)
 {
   if constexpr(std::endian::native == E)
     return;
@@ -60,7 +61,7 @@ template <std::endian E, EndianSwappable T> T ConvertToEndian(T &&value)
   return value;
 }
 
-inline void PrintAsString(const std::vector<std::byte> &stream)
+inline void PrintAsString(const std::span<std::byte> &stream)
 {
   for(const auto &b : stream)
   {

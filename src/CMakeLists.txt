@@ -8,6 +8,7 @@ set(UTIL_SRC ${CMAKE_CURRENT_SOURCE_DIR}/util)
 
 add_library(Formats
   ${FORMATS_SRC}/bin.cpp
+  ${FORMATS_SRC}/hcb.cpp
   ${FORMATS_SRC}/file_view.cpp
 )
 
