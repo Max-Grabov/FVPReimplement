@@ -2,8 +2,8 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <string>
 #include <span>
+#include <string>
 
 namespace AstralAir
 {
@@ -22,7 +22,7 @@ private:
   };
 
   MetaData meta_data_;
-  BinaryStream data_; 
+  BinaryStream data_;
   bool is_mmaped_;
 
 public:

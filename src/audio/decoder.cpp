@@ -35,8 +35,8 @@ std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
     return std::nullopt;
   }
 
-  uint32_t id{Utility::ConvertToEndian<std::endian::little>(
-                Utility::Get<uint32_t>(input_buffer, 0))};
+  uint32_t id{
+      Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 0))};
   if(id != 0x52494646)
   {
     return std::nullopt;
@@ -48,15 +48,16 @@ std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
     return std::nullopt;
   }
 
-  uint32_t format{Utility::ConvertToEndian<std::endian::little>(
-                    Utility::Get<uint32_t>(input_buffer, 8))};
+  uint32_t format{
+      Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 8))};
   if(format != 0x57415645)
   {
     return std::nullopt;
   }
 
   // fmt sub chunk
-  uint32_t fmt_format{Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 12))};
+  uint32_t fmt_format{
+      Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 12))};
   if(fmt_format != 0x666d7420)
   {
     return std::nullopt;
@@ -84,38 +85,47 @@ std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
   }
 
   // data sub chunk
-  uint32_t data_id{Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 36))};
+  uint32_t data_id{
+      Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 36))};
   if(data_id != 0x4C495354)
   {
     return std::nullopt;
   }
 
-  uint32_t pad_string{Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 110))};
+  uint32_t pad_string{
+      Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 110))};
   if(pad_string != 0x50414420)
   {
     return std::nullopt;
   }
 
   uint32_t pad_value{Utility::Get<uint32_t>(input_buffer, 114)};
-  uint32_t data_string{Utility::ConvertToEndian<std::endian::little>(Utility::Get<uint32_t>(input_buffer, 118 + pad_value))};
+  uint32_t data_string{Utility::ConvertToEndian<std::endian::little>(
+      Utility::Get<uint32_t>(input_buffer, 118 + pad_value))};
   if(data_string != 0x64617461)
   {
     return std::nullopt;
   }
 
-  // This size is in bytes, so for floats we divide by 4 when putting into the buffer
   uint32_t data_size{Utility::Get<uint32_t>(input_buffer, 118 + pad_value + 4)};
   if(data_size % sizeof(float) != 0)
   {
     return std::nullopt;
   }
 
-  std::vector<float> pcm(2 * data_size / sizeof(float));
+  // Every 2 bytes is a int16_t, so we need to divide by 2 for the total floats generated
+  std::vector<float> pcm(data_size / sizeof(int16_t));
 
-  // Each int16_t needs to be converted to float, so every 2 bites starting at the offset value becomes 1 float
-  for(size_t i{}; i < 2 * data_size / sizeof(float); i += 1)
+  // Each int16_t needs to be converted to float, so every 2 bites starting at the offset value
+  // becomes 1 float We split as 2 instructions since we are guarranteed data_size % 4 == 0 due to
+  // above assertion
+  for(size_t i{}; i < data_size / sizeof(int16_t) / 2; i += 2)
   {
-    pcm[i] = *reinterpret_cast<int16_t *>(input_buffer.data() + pad_value + 118 + 4 + 4 + 2 * i) / 32768.0f;
+    pcm[i] = *reinterpret_cast<int16_t *>(input_buffer.data() + pad_value + 118 + 4 + 4 + 2 * i) /
+             32768.0f;
+    pcm[i + 1] =
+        *reinterpret_cast<int16_t *>(input_buffer.data() + pad_value + 118 + 4 + 4 + 2 * (i + 1)) /
+        32768.0f;
   }
 
   return AudioStream(std::move(pcm), channels, rate);

@@ -32,7 +32,7 @@ std::optional<Image> CreateImage(std::vector<std::byte> &&stream)
   // At the position 12 + header_size is where the zlib header is located, this must be divisible by
   // 31 and is stored as a little endian 78 01 78 5E 78 9C 78 DA
   uint16_t zlib_header{Utility::ConvertToEndian<std::endian::little, uint16_t>(
-                        Utility::Get<uint16_t>(stream, Utility::Get<uint32_t>(stream, 8) + 12))};
+      Utility::Get<uint16_t>(stream, Utility::Get<uint32_t>(stream, 8) + 12))};
   if((zlib_header % 31) != 0)
   {
     return std::nullopt;

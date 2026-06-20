@@ -3,10 +3,10 @@
 #include <algorithm>
 #include <bit>
 #include <concepts>
-#include <span>
 #include <cstddef>
 #include <cstring>
 #include <iostream>
+#include <span>
 #include <stdexcept>
 #include <type_traits>
 #include <vector>
