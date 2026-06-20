@@ -1,11 +1,15 @@
 #include "hcb.hpp"
 
+#include "binary_stream_util.hpp"
+
 #include <fcntl.h>
 #include <stdexcept>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <cstdint>
+#include <string_view>
 
 namespace AstralAir
 {
@@ -76,6 +80,39 @@ HcbFormat::~HcbFormat()
   }
 }
 
-void HcbFormat::OpenAndRead() {}
+void HcbFormat::OpenAndRead()
+{
+  meta_data_.entry_offset = Utility::Get<uint32_t>(data_, 0); 
+
+  if(data_.size() < meta_data_.entry_offset)
+  {
+    return;
+  }
+
+  uint32_t ptr{meta_data_.entry_offset + 10};
+  ptr += Utility::Get<uint8_t>(data_, ptr);
+  ++ptr;
+  uint16_t function_count{Utility::Get<uint16_t>(data_, ptr)};
+  ptr += 2; 
+
+  uint8_t name_length{};
+
+  // For now just dump it in some std::vector idk
+  std::vector<std::string_view> function_names(function_count);
+  for(uint16_t i{}; i < function_count; ++i)
+  {
+    // Every function seems to have a byte representing length and some other byte, not sure what the other one is yet...
+    // For now skip it
+    ++ptr;
+    name_length = Utility::Get<uint8_t>(data_, ptr++); 
+    function_names[i] = std::string_view(reinterpret_cast<const char *>(data_.data() + ptr), name_length);
+    ptr += name_length;
+  }
+
+  for(const std::string_view s : function_names)
+  {
+    std::cout << s << "\n";
+  }
+}
 } // namespace Formats
 } // namespace AstralAir

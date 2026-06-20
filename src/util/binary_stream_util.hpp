@@ -23,7 +23,7 @@ namespace AstralAir
 namespace Utility
 {
 
-template <Gettable T> T Get(const std::span<std::byte> &stream, size_t offset)
+template <Gettable T> T Get(const std::span<const std::byte> &stream, size_t offset)
 {
   if(offset > stream.size())
   {
@@ -61,7 +61,7 @@ template <std::endian E, EndianSwappable T> T ConvertToEndian(T &&value)
   return value;
 }
 
-inline void PrintAsString(const std::span<std::byte> &stream)
+inline void PrintAsString(const std::span<const std::byte> &stream)
 {
   for(const auto &b : stream)
   {

@@ -25,6 +25,7 @@ add_library(Image
 
 target_include_directories(Formats PUBLIC  
   ${FORMATS_SRC} 
+  ${UTIL_SRC}
 )
 
 target_include_directories(Audio PUBLIC

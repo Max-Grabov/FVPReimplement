@@ -9,6 +9,7 @@ add_executable(test_suite
   file_view_tests.cpp
   utility_tests.cpp
   image_tests.cpp
+  hcb_tests.cpp
 )
 
 target_link_libraries(test_suite PUBLIC gtest gtest_main Formats Audio Image)

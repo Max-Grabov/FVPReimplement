@@ -17,8 +17,8 @@ private:
   using BinaryStream = std::span<const std::byte>;
   struct MetaData
   {
-    uint64_t script_length;
-    uint64_t script_start;
+    uint32_t entry_offset;
+    uint32_t script_start;
   };
 
   MetaData meta_data_;
