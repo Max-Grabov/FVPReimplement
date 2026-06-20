@@ -105,16 +105,19 @@ std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
 
   // This size is in bytes, so for floats we divide by 4 when putting into the buffer
   uint32_t data_size{Utility::Get<uint32_t>(input_buffer, 118 + pad_value + 4)};
-  if(data_size % 4 != 0)
+  if(data_size % sizeof(float) != 0)
   {
     return std::nullopt;
   }
 
-  std::vector<float> pcm(data_size / 4);
+  std::vector<float> pcm(2 * data_size / sizeof(float));
 
-  std::memcpy(pcm.data(), input_buffer.data() + 118 + pad_value + 4 + 4,
-              data_size / 4);
- 
+  // Each int16_t needs to be converted to float, so every 2 bites starting at the offset value becomes 1 float
+  for(size_t i{}; i < 2 * data_size / sizeof(float); i += 1)
+  {
+    pcm[i] = *reinterpret_cast<int16_t *>(input_buffer.data() + pad_value + 118 + 4 + 4 + 2 * i) / 32768.0f;
+  }
+
   return AudioStream(std::move(pcm), channels, rate);
 }
 
