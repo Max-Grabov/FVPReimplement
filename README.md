@@ -1,4 +1,4 @@
-Reimplementation of the engine of **アストラエアの白き永遠** for Linux and other SDL3 supported systems.
+Reimplementation of the FVP engine from scratch for Linux and other SDL3 supported systems.
 
 ## Installation
 #### Dependencies (Ubuntu):
