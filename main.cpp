@@ -21,8 +21,8 @@ static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 static SDL_Texture *texture_image = NULL;
 static SDL_Texture *texture_bg = NULL;
-static AstralAir::Audio::AudioStream g_bgm_data_stream;
-static AstralAir::Audio::AudioStream g_se_data_stream;
+static fvp::Audio::AudioStream g_bgm_data_stream;
+static fvp::Audio::AudioStream g_se_data_stream;
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
@@ -31,10 +31,10 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
       SDL_CreateWindow("Test", 1920, 1080, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
   renderer = SDL_CreateRenderer(window, NULL);
 
-  AstralAir::Formats::BinFormat bgm_bin("./AstralAirData/bgm.bin");
-  AstralAir::Formats::BinFormat bg_vis_bin("./AstralAirData/graph_vis.bin");
-  AstralAir::Formats::BinFormat bg_bin("./AstralAirData/graph_bg.bin");
-  AstralAir::Formats::BinFormat sys_bin("./AstralAirData/se_sys.bin");
+  fvp::Formats::BinFormat bgm_bin("./AstralAirData/bgm.bin");
+  fvp::Formats::BinFormat bg_vis_bin("./AstralAirData/graph_vis.bin");
+  fvp::Formats::BinFormat bg_bin("./AstralAirData/graph_bg.bin");
+  fvp::Formats::BinFormat sys_bin("./AstralAirData/se_sys.bin");
  
   bgm_bin.OpenAndRead();
   bg_vis_bin.OpenAndRead();
@@ -43,10 +43,10 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
   // For testing, we will read the bgm 0 name from the file so it is easy to query, essentially
   // copying the first part of BinFormat::OpenAndRead() for sample
-  AstralAir::Formats::View bg_view("./AstralAirData/graph_vis.bin");
-  AstralAir::Formats::View bg_bg_view("./AstralAirData/graph_bg.bin");
-  AstralAir::Formats::View bgm_view("./AstralAirData/bgm.bin");
-  AstralAir::Formats::View se_sys_view("./AstralAirData/se_sys.bin");
+  fvp::Formats::View bg_view("./AstralAirData/graph_vis.bin");
+  fvp::Formats::View bg_bg_view("./AstralAirData/graph_bg.bin");
+  fvp::Formats::View bgm_view("./AstralAirData/bgm.bin");
+  fvp::Formats::View se_sys_view("./AstralAirData/se_sys.bin");
 
   std::vector<std::byte> query = bgm_view.Read(728, 3);
   std::vector<std::byte> image_query =
@@ -57,8 +57,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
       se_sys_view.Read(8 + se_sys_view.Read<uint32_t>(0) * 12 + se_sys_view.Read<uint32_t>(8), 3);
   
 
-  std::optional<AstralAir::Audio::AudioStream> bgm_data_stream = AstralAir::Audio::DecodeOggContainer(bgm_bin.GetChunk(query));
-  std::optional<AstralAir::Audio::AudioStream> sys_stream = AstralAir::Audio::DecodeWAV(sys_bin.GetChunk(sys_query));
+  std::optional<fvp::Audio::AudioStream> bgm_data_stream = fvp::Audio::DecodeOggContainer(bgm_bin.GetChunk(query));
+  std::optional<fvp::Audio::AudioStream> sys_stream = fvp::Audio::DecodeWAV(sys_bin.GetChunk(sys_query));
   
   if(!SDL_Init(SDL_INIT_AUDIO))
   {
@@ -66,9 +66,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     return SDL_APP_FAILURE;
   }
   
-  bgm_stream = AstralAir::Audio::CreateAudioStream(bgm_data_stream.value());
+  bgm_stream = fvp::Audio::CreateAudioStream(bgm_data_stream.value());
   g_bgm_data_stream = bgm_data_stream.value();
-  se_stream = AstralAir::Audio::CreateAudioStream(sys_stream.value());
+  se_stream = fvp::Audio::CreateAudioStream(sys_stream.value());
   g_se_data_stream = sys_stream.value();
 
   if(!bgm_stream)
@@ -82,7 +82,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
   // Test out textures for BG
   
-  std::optional<AstralAir::Image::Image> image = AstralAir::Image::CreateImage(std::move(image_data));
+  std::optional<fvp::Image::Image> image = fvp::Image::CreateImage(std::move(image_data));
   if(image.has_value())
   {
 
@@ -94,7 +94,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
   }
 
   
-  std::optional<AstralAir::Image::Image> bg_image = AstralAir::Image::CreateImage(std::move(bg_data));
+  std::optional<fvp::Image::Image> bg_image = fvp::Image::CreateImage(std::move(bg_data));
   if(bg_image.has_value())
   {
     texture_bg = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGR24, SDL_TEXTUREACCESS_STATIC,
@@ -133,7 +133,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_RenderClear(renderer);
     SDL_RenderTexture(renderer, texture_bg, nullptr, nullptr);
     SDL_RenderPresent(renderer);
-    AstralAir::Audio::PlayAudio(se_stream, g_se_data_stream);
+    fvp::Audio::PlayAudio(se_stream, g_se_data_stream);
     played = true;
   }
 
