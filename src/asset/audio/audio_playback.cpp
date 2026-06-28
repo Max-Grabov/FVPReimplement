@@ -1,7 +1,7 @@
 #include "audio_playback.hpp"
 #include "audio_stream.hpp"
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Audio
@@ -36,4 +36,4 @@ void PlayAudio(
 }
 
 } // namespace Audio
-} // namespace AstralAir
+} // namespace fvp

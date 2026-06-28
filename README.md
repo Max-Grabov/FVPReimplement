@@ -29,7 +29,3 @@ Then:
 
 `cmake --build <desired-output-folder>`
 
-After compilation, simply run
-
-`./<desired-output-folder>/AstralAir`
-

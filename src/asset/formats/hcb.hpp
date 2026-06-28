@@ -5,7 +5,7 @@
 #include <span>
 #include <string>
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Formats
@@ -17,8 +17,7 @@ private:
   using BinaryStream = std::span<const std::byte>;
   struct MetaData
   {
-    uint32_t entry_offset;
-    uint32_t script_start;
+    uint32_t sys_call_start;;
   };
 
   MetaData meta_data_;
@@ -33,8 +32,8 @@ public:
   HcbFormat &operator=(const HcbFormat &) = delete;
   HcbFormat &operator=(HcbFormat &&) = delete;
 
-  void OpenAndRead();
+  void GetSysCallMap();
 };
 } // namespace Formats
 
-} // namespace AstralAir
+} // namespace fvp

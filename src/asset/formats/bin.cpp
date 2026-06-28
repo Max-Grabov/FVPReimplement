@@ -10,7 +10,7 @@
 // File decoding for the binary files is heavily based on
 // https://github.com/morkt/GARbro/blob/master/ArcFormats/Favorite/ArcBIN.cs
 // As these goats figured out the way to decode the binary files.
-namespace AstralAir
+namespace fvp
 {
 
 namespace Formats
@@ -91,4 +91,4 @@ std::vector<std::byte> BinFormat::GetChunk(const EntryName &name, const uint32_t
 }
 
 } // namespace Formats
-} // namespace AstralAir
+} // namespace fvp

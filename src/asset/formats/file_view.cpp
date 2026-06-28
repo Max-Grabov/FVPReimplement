@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <vector>
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Formats
@@ -149,4 +149,4 @@ View::Read<uint64_t>(const uint64_t,
 
 } // namespace Formats
 
-} // namespace AstralAir
+} // namespace fvp

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Audio
@@ -23,4 +23,4 @@ public:
   inline long GetRate() const { return rate_; }
 };
 } // namespace Audio
-} // namespace AstralAir
+} // namespace fvp

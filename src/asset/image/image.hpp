@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Image
@@ -34,4 +34,4 @@ public:
   const std::vector<char> &GetPixels() const;
 };
 } // namespace Image
-} // namespace AstralAir
+} // namespace fvp

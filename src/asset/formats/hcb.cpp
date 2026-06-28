@@ -1,6 +1,6 @@
 #include "hcb.hpp"
 
-#include "binary_stream_util.hpp"
+#include "util/binary_stream_util.hpp"
 
 #include <fcntl.h>
 #include <stdexcept>
@@ -9,9 +9,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <cstdint>
+#include <vector>
 #include <string_view>
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Formats
@@ -80,16 +81,16 @@ HcbFormat::~HcbFormat()
   }
 }
 
-void HcbFormat::OpenAndRead()
+void HcbFormat::GetSysCallMap()
 {
-  meta_data_.entry_offset = Utility::Get<uint32_t>(data_, 0); 
+  meta_data_.sys_call_start = Utility::Get<uint32_t>(data_, 0); 
 
-  if(data_.size() < meta_data_.entry_offset)
+  if(data_.size() < meta_data_.sys_call_start)
   {
     return;
   }
 
-  uint32_t ptr{meta_data_.entry_offset + 10};
+  uint32_t ptr{meta_data_.sys_call_start + 10};
   ptr += Utility::Get<uint8_t>(data_, ptr);
   ++ptr;
   uint16_t function_count{Utility::Get<uint16_t>(data_, ptr)};
@@ -115,4 +116,4 @@ void HcbFormat::OpenAndRead()
   }
 }
 } // namespace Formats
-} // namespace AstralAir
+} // namespace fvp

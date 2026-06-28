@@ -1,6 +1,6 @@
 #include "audio_stream.hpp"
 
-namespace AstralAir
+namespace fvp
 {
 namespace Audio
 {
@@ -24,4 +24,4 @@ AudioStream::AudioStream(std::vector<float> &&stream, long channels = 0, long ra
 AudioStream::AudioStream() : stream_(), channels_(0), rate_(0) {}
 
 } // namespace Audio
-} // namespace AstralAir
+} // namespace fvp

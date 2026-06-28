@@ -1,4 +1,4 @@
-#include "binary_stream_util.hpp"
+#include "util/binary_stream_util.hpp"
 #include "file_view.hpp"
 
 #include "gtest/gtest.h"
@@ -8,19 +8,19 @@
 
 TEST(FileViewTest, InvalidPath)
 {
-  AstralAir::Formats::View view{""};
+  fvp::Formats::View view{""};
   EXPECT_FALSE(view.ValidPath());
 }
 
 TEST(FileViewTest, ValidPath)
 {
-  AstralAir::Formats::View view{"./CMakeLists.txt"};
+  fvp::Formats::View view{"./CMakeLists.txt"};
   EXPECT_TRUE(view.ValidPath());
 }
 
 TEST(FileViewTest, FileSizeRead)
 {
-  AstralAir::Formats::View view{"./AstralAirData/voice.bin"};
+  fvp::Formats::View view{"./AstralAirData/voice.bin"};
 
   EXPECT_TRUE(view.ValidPath());
 
@@ -30,7 +30,7 @@ TEST(FileViewTest, FileSizeRead)
 
 TEST(FileViewTest, FileReadUInt8)
 {
-  AstralAir::Formats::View view{"./AstralAirData/voice.bin"};
+  fvp::Formats::View view{"./AstralAirData/voice.bin"};
   uint8_t test_array[8] = {0b00011000, 0b10000001, 0b00000000, 0b00000000,
                            0b00011011, 0b00001011, 0b00000101, 0b00000000};
 
@@ -43,7 +43,7 @@ TEST(FileViewTest, FileReadUInt8)
 
 TEST(FileViewTest, FileReadUInt32)
 {
-  AstralAir::Formats::View view{"./AstralAirData/voice.bin"};
+  fvp::Formats::View view{"./AstralAirData/voice.bin"};
   /*0x18810000  0x1b0b0500*/
 
   uint32_t test_array[8] = {0x18810000, 0x1b0b0500, 0x00000000, 0x43180b00,
@@ -52,14 +52,14 @@ TEST(FileViewTest, FileReadUInt32)
   EXPECT_TRUE(view.ValidPath());
   for(uint32_t it{0}; it < 8; ++it)
   {
-    AstralAir::Utility::ConvertToEndian<std::endian::little>(test_array[it]);
+    fvp::Utility::ConvertToEndian<std::endian::little>(test_array[it]);
     EXPECT_EQ(view.Read<uint32_t>(it * sizeof(uint32_t)), test_array[it]);
   }
 }
 
 TEST(FileViewTest, FileReadUInt64)
 {
-  AstralAir::Formats::View view{"./AstralAirData/voice.bin"};
+  fvp::Formats::View view{"./AstralAirData/voice.bin"};
   uint64_t test_array[8] = {0x00050b1b00008118, 0x000b184300000000, 0x0000000a00009941,
                             0x00008ef3000bb184, 0x000c407700000014, 0x0000001e0000b368,
                             0x0000c62a000cf3df, 0x000dba0900000028};
@@ -74,10 +74,10 @@ TEST(FileViewTest, FileReadUInt64)
 
 TEST(FileViewTest, FileViewMove)
 {
-  AstralAir::Formats::View view{"./CMakeLists.txt"};
+  fvp::Formats::View view{"./CMakeLists.txt"};
   EXPECT_TRUE(view.ValidPath());
 
-  AstralAir::Formats::View other(std::move(view));
+  fvp::Formats::View other(std::move(view));
   EXPECT_TRUE(other.ValidPath());
 }
 
@@ -90,7 +90,7 @@ TEST(FileViewTest, FileReadString)
 
   file_to_read.close();
 
-  AstralAir::Formats::View view{"./AstralAirData/test.bin"};
+  fvp::Formats::View view{"./AstralAirData/test.bin"};
   EXPECT_TRUE(view.ValidPath());
 
   // offset 0 size 5

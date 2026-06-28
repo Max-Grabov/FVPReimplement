@@ -9,7 +9,6 @@
 #include <span>
 #include <stdexcept>
 #include <type_traits>
-#include <vector>
 
 template <typename T>
 concept Gettable = std::is_standard_layout_v<T> && std::is_trivial_v<T>;
@@ -17,13 +16,14 @@ concept Gettable = std::is_standard_layout_v<T> && std::is_trivial_v<T>;
 template <typename T>
 concept EndianSwappable = std::is_integral_v<T> || std::is_floating_point_v<T>;
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Utility
 {
 
-template <Gettable T> T Get(const std::span<const std::byte> &stream, size_t offset)
+
+template <Gettable T> [[nodiscard]] T Get(const std::span<const std::byte> &stream, size_t offset)
 {
   if(offset > stream.size())
   {
@@ -54,7 +54,7 @@ template <std::endian E, EndianSwappable T> void ConvertToEndian(T &value)
                reinterpret_cast<std::byte *>(&value) + sizeof(T));
 }
 
-template <std::endian E, EndianSwappable T> T ConvertToEndian(T &&value)
+template <std::endian E, EndianSwappable T> [[nodiscard]] T ConvertToEndian(T &&value)
 {
   std::reverse(reinterpret_cast<std::byte *>(&value),
                reinterpret_cast<std::byte *>(&value) + sizeof(T));
@@ -71,4 +71,4 @@ inline void PrintAsString(const std::span<const std::byte> &stream)
 }
 
 } // namespace Utility
-} // namespace AstralAir
+} // namespace fvp

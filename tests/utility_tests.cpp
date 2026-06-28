@@ -1,11 +1,11 @@
-#include "binary_stream_util.hpp"
+#include "util/binary_stream_util.hpp"
 #include "gtest/gtest.h"
 
 #include <vector>
 
 TEST(UtilTest, TestGet)
 {
-  using namespace AstralAir::Utility;
+  using namespace fvp::Utility;
 
   std::vector<std::byte> t{};
   t.emplace_back(std::byte(0));
@@ -19,7 +19,7 @@ TEST(UtilTest, TestGet)
 
 TEST(UtilTest, TestConvertEndian)
 {
-  using namespace AstralAir::Utility;
+  using namespace fvp::Utility;
 
   std::vector<std::byte> t{};
   t.emplace_back(std::byte(0));
@@ -35,7 +35,7 @@ TEST(UtilTest, TestConvertEndian)
 
 TEST(UtilTest, TestConvertEndianType)
 {
-  using namespace AstralAir::Utility;
+  using namespace fvp::Utility;
 
   std::vector<uint32_t> t = {0x01010101, 0x20003000, 0x12345678};
 

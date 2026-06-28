@@ -4,7 +4,7 @@
 
 #include <SDL3/SDL_audio.h>
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Audio
@@ -16,4 +16,4 @@ void PlayAudio(SDL_AudioStream *, const AudioStream &,
                const std::function<void(SDL_AudioStream *, const AudioStream &)> & = nullptr);
 
 } // namespace Audio
-} // namespace AstralAir
+} // namespace fvp

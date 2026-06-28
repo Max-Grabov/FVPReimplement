@@ -5,15 +5,17 @@
 #include <optional>
 #include <vector>
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Audio
 {
 
+[[nodiscard]]
 std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&);
 
+[[nodiscard]]
 std::optional<AudioStream> DecodeOggContainer(const std::vector<std::byte> &);
 
 } // namespace Audio
-} // namespace AstralAir
+} // namespace fvp

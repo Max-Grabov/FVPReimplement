@@ -6,7 +6,7 @@
 #include <streambuf>
 #include <vector>
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Image
@@ -19,7 +19,8 @@ public:
   inline ImageBuf() {}
 };
 
+[[nodiscard]]
 std::optional<Image> CreateImage(std::vector<std::byte> &&stream);
 
 } // namespace Image
-} // namespace AstralAir
+} // namespace fvp

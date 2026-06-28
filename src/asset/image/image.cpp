@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Image
@@ -25,4 +25,4 @@ const Image::ImageMetaData &Image::GetMetaData() const { return meta_data_; }
 const std::vector<char> &Image::GetPixels() const { return pixels_; }
 } // namespace Image
 
-} // namespace AstralAir
+} // namespace fvp

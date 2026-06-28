@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Formats
@@ -43,4 +43,4 @@ public:
 
 } // namespace Formats
 
-} // namespace AstralAir
+} // namespace fvp

@@ -9,14 +9,14 @@
 
 TEST(AudioTest, DecodeTest)
 {
-  using namespace AstralAir::Audio;
-  using AstralAir::Formats::BinFormat;
-  using AstralAir::Formats::View;
+  using namespace fvp::Audio;
+  using fvp::Formats::BinFormat;
+  using fvp::Formats::View;
 
   BinFormat bin("./AstralAirData/voice.bin");
   bin.OpenAndRead();
 
-  AstralAir::Formats::View voice_view("./AstralAirData/voice.bin");
+  fvp::Formats::View voice_view("./AstralAirData/voice.bin");
   std::vector<std::byte> query =
       voice_view.Read(8 + voice_view.Read<uint32_t>(0) * 12 + voice_view.Read<uint32_t>(8), 9);
 
@@ -29,9 +29,9 @@ TEST(AudioTest, DecodeTest)
 
 TEST(AudioTest, WAVDecodeTest)
 {
-  using namespace AstralAir::Audio;
-  using AstralAir::Formats::BinFormat;
-  using AstralAir::Formats::View;
+  using namespace fvp::Audio;
+  using fvp::Formats::BinFormat;
+  using fvp::Formats::View;
 
   BinFormat sys_bin("./AstralAirData/se_sys.bin");
   sys_bin.OpenAndRead();
@@ -40,9 +40,9 @@ TEST(AudioTest, WAVDecodeTest)
   BinFormat se_bin("./AstralAirData/se.bin");
   se_bin.OpenAndRead();
 
-  AstralAir::Formats::View se_sys_view("./AstralAirData/se_sys.bin");
-  AstralAir::Formats::View se_env_view("./AstralAirData/se_env.bin");
-  AstralAir::Formats::View se_view("./AstralAirData/se.bin");
+  fvp::Formats::View se_sys_view("./AstralAirData/se_sys.bin");
+  fvp::Formats::View se_env_view("./AstralAirData/se_env.bin");
+  fvp::Formats::View se_view("./AstralAirData/se.bin");
 
   std::vector<std::byte> sys_query =
       se_sys_view.Read(8 + se_sys_view.Read<uint32_t>(0) * 12 + se_sys_view.Read<uint32_t>(8), 3);

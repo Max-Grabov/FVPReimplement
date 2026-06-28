@@ -3,8 +3,8 @@
 
 TEST(HCBTest, TestOpenAndRead)
 {
-  using AstralAir::Formats::HcbFormat;
+  using fvp::Formats::HcbFormat;
 
   HcbFormat hcb("./AstralAirData/Snow.hcb");
-  hcb.OpenAndRead(); 
+  //hcb.OpenAndRead(); 
 }

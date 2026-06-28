@@ -1,6 +1,6 @@
 #include "decoder.hpp"
 #include "audio_stream.hpp"
-#include "binary_stream_util.hpp"
+#include "util/binary_stream_util.hpp"
 #include <bit>
 
 #include "vorbis/codec.h"
@@ -17,7 +17,7 @@
 
 // Ogg Stream decoding adapted from this example here ->
 // https://github.com/xiph/vorbis/blob/main/examples/decoder_example.c
-namespace AstralAir
+namespace fvp
 {
 
 namespace Audio
@@ -318,4 +318,4 @@ std::optional<AudioStream> DecodeOggContainer(const std::vector<std::byte> &inpu
 }
 
 } // namespace Audio
-} // namespace AstralAir
+} // namespace fvp

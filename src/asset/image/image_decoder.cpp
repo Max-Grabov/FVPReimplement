@@ -1,5 +1,5 @@
 #include "image_decoder.hpp"
-#include "binary_stream_util.hpp"
+#include "util/binary_stream_util.hpp"
 #include "image.hpp"
 
 #include "zstr.hpp"
@@ -8,7 +8,7 @@
 #include <optional>
 #include <vector>
 
-namespace AstralAir
+namespace fvp
 {
 
 namespace Image
@@ -59,4 +59,4 @@ std::optional<Image> CreateImage(std::vector<std::byte> &&stream)
                std::move(pixels));
 }
 } // namespace Image
-} // namespace AstralAir
+} // namespace fvp
