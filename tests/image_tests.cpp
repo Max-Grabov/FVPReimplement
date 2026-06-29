@@ -12,7 +12,7 @@ TEST(StreamTest, TestGetImage)
 {
   using namespace fvp::Image;
   using fvp::Formats::BinFormat;
-  using fvp::Formats::View;
+  using fvp::Utility::View;
 
   BinFormat vis_bin("./AstralAirData/graph_vis.bin");
   vis_bin.OpenAndRead();

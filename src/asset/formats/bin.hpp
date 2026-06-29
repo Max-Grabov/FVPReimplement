@@ -1,6 +1,6 @@
 #pragma once
 
-#include "file_view.hpp"
+#include "util/file_view.hpp"
 
 #include <cstdint>
 #include <map>
@@ -24,7 +24,7 @@ private:
   };
 
   std::map<EntryName, Entry> data_collection_;
-  View file_view_;
+  Utility::View file_view_;
 
 public:
   explicit BinFormat(const std::string &path);

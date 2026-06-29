@@ -5,7 +5,7 @@
 #include "audio_stream.hpp"
 #include "bin.hpp"
 #include "decoder.hpp"
-#include "file_view.hpp"
+#include "util/file_view.hpp"
 #include "image_decoder.hpp"
 #include "image.hpp"
 #include <vector>
@@ -43,10 +43,10 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
   // For testing, we will read the bgm 0 name from the file so it is easy to query, essentially
   // copying the first part of BinFormat::OpenAndRead() for sample
-  fvp::Formats::View bg_view("./AstralAirData/graph_vis.bin");
-  fvp::Formats::View bg_bg_view("./AstralAirData/graph_bg.bin");
-  fvp::Formats::View bgm_view("./AstralAirData/bgm.bin");
-  fvp::Formats::View se_sys_view("./AstralAirData/se_sys.bin");
+  fvp::Utility::View bg_view("./AstralAirData/graph_vis.bin");
+  fvp::Utility::View bg_bg_view("./AstralAirData/graph_bg.bin");
+  fvp::Utility::View bgm_view("./AstralAirData/bgm.bin");
+  fvp::Utility::View se_sys_view("./AstralAirData/se_sys.bin");
 
   std::vector<std::byte> query = bgm_view.Read(728, 3);
   std::vector<std::byte> image_query =

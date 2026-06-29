@@ -22,7 +22,6 @@ namespace fvp
 namespace Utility
 {
 
-
 template <Gettable T> [[nodiscard]] T Get(const std::span<const std::byte> &stream, size_t offset)
 {
   if(offset > stream.size())

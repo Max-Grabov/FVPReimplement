@@ -8,7 +8,6 @@ set(IMAGE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/image)
 add_library(Formats
   ${FORMATS_SRC}/bin.cpp
   ${FORMATS_SRC}/hcb.cpp
-  ${FORMATS_SRC}/file_view.cpp
 )
 
 add_library(Audio
