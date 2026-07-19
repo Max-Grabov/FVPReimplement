@@ -58,5 +58,17 @@ std::optional<Image> CreateImage(std::vector<std::byte> &&stream)
   return Image({type, width, height, offset_x, offset_y, bpp, unpacked_size, header_size},
                std::move(pixels));
 }
+
+std::optional<Image> CreateImageFromRawBytes(std::span<const std::byte> &stream, uint16_t width, uint16_t height)
+{
+  if(!stream.data()) return std::nullopt;
+  if(stream.size() != width * height * 4) return std::nullopt;
+
+  std::vector<char> pixels_raw(stream.size());
+  std::memcpy(pixels_raw.data(), stream.data(), stream.size());
+
+  return Image({0, width, height, 0, 0, 0, static_cast<uint32_t>(width * height * 4), 0}, std::move(pixels_raw));
+}
+
 } // namespace Image
 } // namespace fvp

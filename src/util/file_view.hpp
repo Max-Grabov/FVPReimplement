@@ -43,7 +43,7 @@ public:
   const std::ifstream &GetFileStream() const { return file_data_; }
 
   template <typename T>
-  T Read(const uint64_t offset, const std::function<void(std::vector<std::byte> &)> &strategy = nullptr)
+  [[nodiscard]] T Read(const uint64_t offset, const std::function<void(std::vector<std::byte> &)> &strategy = nullptr)
   {
     if(!ValidPath())
     {
@@ -84,7 +84,7 @@ public:
     return data;
   }
 
-  std::vector<std::byte> Read(const uint64_t offset, const uint64_t size,
+  [[nodiscard]] std::vector<std::byte> Read(const uint64_t offset, const uint64_t size,
                                   const std::function<void(std::vector<std::byte> &)> &strategy = nullptr)
   {
     if(!ValidPath())

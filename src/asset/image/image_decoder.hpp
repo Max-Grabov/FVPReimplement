@@ -5,6 +5,7 @@
 #include <optional>
 #include <streambuf>
 #include <vector>
+#include <span>
 
 namespace fvp
 {
@@ -21,6 +22,9 @@ public:
 
 [[nodiscard]]
 std::optional<Image> CreateImage(std::vector<std::byte> &&stream);
+
+[[nodiscard]]
+std::optional<Image> CreateImageFromRawBytes(std::span<const std::byte> &stream, uint16_t width, uint16_t height);
 
 } // namespace Image
 } // namespace fvp

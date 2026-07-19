@@ -24,6 +24,11 @@ namespace Utility
 
 template <Gettable T> [[nodiscard]] T Get(const std::span<const std::byte> &stream, size_t offset)
 {
+  if(!stream.data())
+  {
+    throw std::runtime_error("Null Stream");
+  }
+
   if(offset > stream.size())
   {
     throw std::runtime_error("Offset is larger than size");
@@ -37,6 +42,29 @@ template <Gettable T> [[nodiscard]] T Get(const std::span<const std::byte> &stre
   T data{};
 
   std::memcpy(&data, stream.data() + offset, sizeof(T));
+  return data;
+}
+
+template <Gettable T> void Write(std::span<const std::byte> *stream, size_t offset, const T &value)
+{
+  if(!stream || !stream->data())
+  {
+    throw std::runtime_error("Null Stream");
+  }
+
+  if(offset > stream->size())
+  {
+    throw std::runtime_error("Offset is larger than size");
+  }
+
+  if(offset + sizeof(T) > stream->size())
+  {
+    throw std::runtime_error("Offset + template size is larger than size");
+  }
+
+  T data{};
+
+  std::memcpy(stream->data() + offset, &data, sizeof(T));
   return data;
 }
 

@@ -1,6 +1,5 @@
-#include "hcb.hpp"
+#include "persistent_file.hpp"
 
-#include "util/binary_stream_util.hpp"
 
 #include <fcntl.h>
 #include <stdexcept>
@@ -8,16 +7,14 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <cstdint>
-#include <vector>
-#include <string_view>
 
 namespace fvp
 {
 
 namespace Formats
 {
-HcbFormat::HcbFormat(const std::string &path)
+
+PersistentFile::PersistentFile(const std::string &path)
 {
   // We set up the memory mapping here, if it fails, we fallback to using new to allocate a buffer,
   // this way we don't just crash for no reason.
@@ -65,7 +62,7 @@ HcbFormat::HcbFormat(const std::string &path)
   data_ = std::span<const std::byte>(buffer, static_cast<size_t>(file_stat.st_size));
 };
 
-HcbFormat::~HcbFormat()
+PersistentFile::~PersistentFile()
 {
   if(is_mmaped_)
   {
@@ -81,39 +78,6 @@ HcbFormat::~HcbFormat()
   }
 }
 
-void HcbFormat::GetSysCallMap()
-{
-  meta_data_.sys_call_start = Utility::Get<uint32_t>(data_, 0); 
-
-  if(data_.size() < meta_data_.sys_call_start)
-  {
-    return;
-  }
-
-  uint32_t ptr{meta_data_.sys_call_start + 10};
-  ptr += Utility::Get<uint8_t>(data_, ptr);
-  ++ptr;
-  uint16_t function_count{Utility::Get<uint16_t>(data_, ptr)};
-  ptr += 2; 
-
-  uint8_t name_length{};
-
-  // For now just dump it in some std::vector idk
-  std::vector<std::string_view> function_names(function_count);
-  for(uint16_t i{}; i < function_count; ++i)
-  {
-    // Every function seems to have a byte representing length and some other byte, not sure what the other one is yet...
-    // For now skip it
-    ++ptr;
-    name_length = Utility::Get<uint8_t>(data_, ptr++); 
-    function_names[i] = std::string_view(reinterpret_cast<const char *>(data_.data() + ptr), name_length);
-    ptr += name_length;
-  }
-
-  for(const std::string_view s : function_names)
-  {
-    std::cout << s << "\n";
-  }
-}
 } // namespace Formats
+
 } // namespace fvp
