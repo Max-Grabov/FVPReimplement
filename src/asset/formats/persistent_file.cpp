@@ -1,7 +1,9 @@
 #include "persistent_file.hpp"
 
 
+#include <exception>
 #include <fcntl.h>
+#include <optional>
 #include <stdexcept>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -14,7 +16,9 @@ namespace fvp
 namespace Formats
 {
 
-PersistentFile::PersistentFile(const std::string &path)
+// TODO Don't throw runtime errors, and allow for users to specify some enum class mix of options | together for file options
+// Instead return a std::span with a null ptr and 0 size, so we can check for invalid opens on read only files easily instead of crashing.
+PersistentFile::PersistentFile(const std::string_view path)
 {
   // We set up the memory mapping here, if it fails, we fallback to using new to allocate a buffer,
   // this way we don't just crash for no reason.
@@ -27,15 +31,15 @@ PersistentFile::PersistentFile(const std::string &path)
 
   // If we fail to open the file, there is probably something catastrophic going on (e.g. no file),
   // so we throw a runtime exception
-  fd = open(path.c_str(), O_RDONLY);
+  fd = open(path.data(), O_RDONLY);
   if(fd == -1)
   {
-    throw std::runtime_error("Unable to open file! The filepath given was " + path);
+    throw std::runtime_error(std::string("Unable to open file! The filepath given was ") + std::string(path));
   }
 
   if(fstat(fd, &file_stat) == -1)
   {
-    throw std::runtime_error("Unable to get file stats about " + path);
+    throw std::runtime_error(std::string("Unable to get file stats about ") + std::string(path));
   }
 
   buffer = reinterpret_cast<const std::byte *>(
@@ -49,8 +53,7 @@ PersistentFile::PersistentFile(const std::string &path)
     buffer = new std::byte[static_cast<size_t>(file_stat.st_size)];
     if(!buffer)
     {
-      throw std::runtime_error("Error memory mapping and allocating a block for file data at " +
-                               path);
+      throw std::runtime_error(std::string("Error memory mapping and allocating a block for file data at ") + std::string(path));
     }
 
     // Now load the data into the buffer, mmap will already have it since OS will load data into

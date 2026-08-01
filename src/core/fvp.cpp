@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <format>
+#include <span>
 
 namespace fvp
 {
@@ -14,11 +15,52 @@ FVP::FVP() : save_file_directory_(""), overall_save_file_(std::vformat("{}/save/
 {}
 void FVP::OpenOverallSave()
 {
-  // TODO Check if first time file opening as different instructions will happen  
-  uint32_t ptr{};
+  if(overall_save_file_.Valid())
+  {
+    uint32_t ptr{};
+  }
+
+  else
+  {
+
+  }
+ 
   // TODO HCB stuff for opcode portion of the copies, also creating the opcode list 
   // TODO Windows to SDL config shit for window showing, cursor placement, window size etc.
+}
 
+void FVP::OpenHCBFile()
+{
+  // Syscall stuff, this is where they start
+  hcb_current_file_position_ = HCB_file_.Get<uint32_t>(hcb_current_file_position_);
+
+  // Some number, idk yet what it represents
+  uint32_t foo{HCB_file_.GetAndIncrement<uint32_t>(hcb_current_file_position_)};
+
+  // I think
+  uint16_t opcode_count{HCB_file_.GetAndIncrement<uint16_t>(hcb_current_file_position_)};
+  uint16_t opcodes_processed{HCB_file_.GetAndIncrement<uint16_t>(hcb_current_file_position_)};  
+
+  opcodes_.reserve(opcode_count + opcodes_processed);
+
+  // I think this is what this byte represents, in the decomp it is read and used to scale the width, height, etc.
+  uint16_t window_scaling_value{HCB_file_.GetAndIncrement<uint16_t>(hcb_current_file_position_)};
+  uint16_t game_title_size{HCB_file_.GetAndIncrement<uint16_t>(hcb_current_file_position_)};
+ 
+  const std::span<const std::byte> game_title{HCB_file_.Get(hcb_current_file_position_, game_title_size)};
+  hcb_current_file_position_ += game_title_size;
+
+  // Now we have all the sys calls
+  uint16_t syscall_count{HCB_file_.GetAndIncrement<uint16_t>(hcb_current_file_position_)}; 
+
+  // TODO
+  while(true)
+  {
+    if(syscall_count == 0)
+    {
+      
+    }
+  }
 }
 
 void FVP::GetSaveInformation(uint32_t save_number)
