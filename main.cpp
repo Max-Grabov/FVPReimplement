@@ -1,7 +1,7 @@
 #include "SDL3/SDL_pixels.h"
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_video.h"
-#include "audio_playback.hpp"
+#include "core/audio_playback.hpp"
 #include "audio_stream.hpp"
 #include "bin.hpp"
 #include "decoder.hpp"
@@ -66,9 +66,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     return SDL_APP_FAILURE;
   }
   
-  bgm_stream = fvp::Audio::CreateAudioStream(bgm_data_stream.value());
+  bgm_stream = fvp::Core::CreateAudioStream(bgm_data_stream.value());
   g_bgm_data_stream = bgm_data_stream.value();
-  se_stream = fvp::Audio::CreateAudioStream(sys_stream.value());
+  se_stream = fvp::Core::CreateAudioStream(sys_stream.value());
   g_se_data_stream = sys_stream.value();
 
   if(!bgm_stream)
@@ -133,7 +133,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_RenderClear(renderer);
     SDL_RenderTexture(renderer, texture_bg, nullptr, nullptr);
     SDL_RenderPresent(renderer);
-    fvp::Audio::PlayAudio(se_stream, g_se_data_stream);
+    fvp::Core::PlayAudio(se_stream, g_se_data_stream);
     played = true;
   }
 

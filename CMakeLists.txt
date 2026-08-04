@@ -12,7 +12,7 @@ add_subdirectory(src)
 
 add_executable(fvp main.cpp)
 
-target_link_libraries(fvp PRIVATE Audio Formats Image)
+target_link_libraries(fvp PRIVATE Audio Formats Image Core SDL3::SDL3)
 
 if(${BUILD_TESTS})
   add_subdirectory(tests)

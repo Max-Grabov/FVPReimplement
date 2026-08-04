@@ -4,7 +4,6 @@
 #include "decoder.hpp"
 
 #include "gtest/gtest.h"
-#include <SDL3/SDL.h>
 #include <optional>
 
 TEST(AudioTest, DecodeTest)

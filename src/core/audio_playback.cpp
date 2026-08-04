@@ -1,13 +1,13 @@
 #include "audio_playback.hpp"
-#include "audio_stream.hpp"
+#include "audio/audio_stream.hpp"
 
 namespace fvp
 {
 
-namespace Audio
+namespace Core
 {
 
-SDL_AudioStream *CreateAudioStream(const AudioStream &stream)
+SDL_AudioStream *CreateAudioStream(const Audio::AudioStream &stream)
 {
   SDL_AudioSpec spec;
   spec.channels = stream.GetChannels();
@@ -20,8 +20,8 @@ SDL_AudioStream *CreateAudioStream(const AudioStream &stream)
 }
 
 void PlayAudio(
-    SDL_AudioStream *stream, const AudioStream &data_stream,
-    const std::function<void(SDL_AudioStream *, const AudioStream &)> &data_processing_strategy)
+    SDL_AudioStream *stream, const Audio::AudioStream &data_stream,
+    const std::function<void(SDL_AudioStream *, const Audio::AudioStream &)> &data_processing_strategy)
 {
   // If no supplied strategy, we just dump all of the data into the stream at once
   if(!data_processing_strategy)

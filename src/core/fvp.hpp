@@ -1,7 +1,7 @@
 #pragma once
 
-#include "asset/formats/persistent_file.hpp"
-#include "asset/formats/save_information.hpp"
+#include "formats/persistent_file.hpp"
+#include "formats/save_information.hpp"
 #include "opcode.hpp"
 #include <cstdint>
 #include <string_view>
