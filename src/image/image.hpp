@@ -24,14 +24,14 @@ private:
     uint32_t header_size;
   };
   ImageMetaData meta_data_;
-  std::vector<char> pixels_;
+  std::vector<std::byte> pixels_;
 
 public:
-  Image(const ImageMetaData &, std::vector<char> &&);
+  Image(const ImageMetaData &, std::vector<std::byte> &&);
   void PrintImageMetaData() const;
 
   const ImageMetaData &GetMetaData() const;
-  const std::vector<char> &GetPixels() const;
+  const std::vector<std::byte> &GetPixels() const;
 };
 } // namespace Image
 } // namespace fvp

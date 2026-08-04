@@ -31,7 +31,9 @@ public:
   PersistentFile &operator=(const PersistentFile &) = delete;
   PersistentFile &operator=(PersistentFile &&) = delete;
 
-  inline bool Valid() { return (data_.empty()); }
+  inline bool Valid() { return (!data_.empty()); }
+
+  inline const std::byte *Data() const { return data_.data(); }
 
   // Really should be a size_t parameter, but not sure if I will need to use integers, shorts etc. This way atleast it allows those types and allows for checks to ensure no negative values
   template <Gettable T, typename P> [[nodiscard]] inline T Get(P offset)

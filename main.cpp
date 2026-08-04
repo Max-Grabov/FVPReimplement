@@ -3,6 +3,9 @@
 #include "SDL3/SDL_video.h"
 #include "core/audio_playback.hpp"
 #include "audio_stream.hpp"
+#include <format>
+#include "formats/save_information.hpp"
+#include "core/fvp.hpp"
 #include "bin.hpp"
 #include "decoder.hpp"
 #include "util/file_view.hpp"
@@ -23,6 +26,7 @@ static SDL_Texture *texture_image = NULL;
 static SDL_Texture *texture_bg = NULL;
 static fvp::Audio::AudioStream g_bgm_data_stream;
 static fvp::Audio::AudioStream g_se_data_stream;
+static fvp::Core::FVP app = fvp::Core::FVP::Init();
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
@@ -80,8 +84,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
   std::vector<std::byte> image_data = bg_vis_bin.GetChunk(image_query);
   std::vector<std::byte> bg_data = bg_bin.GetChunk(bg_query);
 
-  // Test out textures for BG
-  
+  // Test out textures for BG 
   std::optional<fvp::Image::Image> image = fvp::Image::CreateImage(std::move(image_data));
   if(image.has_value())
   {
@@ -92,7 +95,6 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
                       reinterpret_cast<const void *>(image.value().GetPixels().data()),
                       3 * image.value().GetMetaData().width);
   }
-
   
   std::optional<fvp::Image::Image> bg_image = fvp::Image::CreateImage(std::move(bg_data));
   if(bg_image.has_value())
@@ -102,6 +104,13 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     SDL_UpdateTexture(texture_bg, nullptr, reinterpret_cast<const void *>(bg_image.value().GetPixels().data()),
                       3 * bg_image.value().GetMetaData().width);
   }
+
+// Save images are different pixel formats, alpha is just 0xFF, saving this for future reference TODO 
+//  texture_save = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGRX32, SDL_TEXTUREACCESS_STATIC,
+//                                      save_preview.GetMetaData().width, save_preview.GetMetaData().height);
+//  SDL_UpdateTexture(texture_save, nullptr,
+//                    reinterpret_cast<const void *>(save_preview.GetPixels().data()),
+//                    4 * save_preview.GetMetaData().width);
 
   SDL_ResumeAudioStreamDevice(bgm_stream);
   SDL_ResumeAudioStreamDevice(se_stream);

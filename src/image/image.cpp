@@ -8,7 +8,7 @@ namespace fvp
 namespace Image
 {
 
-Image::Image(const ImageMetaData &meta_data, std::vector<char> &&pixels)
+Image::Image(const ImageMetaData &meta_data, std::vector<std::byte> &&pixels)
     : meta_data_(meta_data), pixels_(std::move(pixels))
 {
 }
@@ -22,7 +22,7 @@ void Image::PrintImageMetaData() const
 
 const Image::ImageMetaData &Image::GetMetaData() const { return meta_data_; }
 
-const std::vector<char> &Image::GetPixels() const { return pixels_; }
+const std::vector<std::byte> &Image::GetPixels() const { return pixels_; }
 } // namespace Image
 
 } // namespace fvp

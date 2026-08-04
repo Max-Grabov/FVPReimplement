@@ -48,13 +48,15 @@ std::optional<Image> CreateImage(std::vector<std::byte> &&stream)
   uint16_t bpp = 0 == type ? 24 : type > 2 ? 8 : 32;
   uint32_t position{12 + header_size};
 
+  // TODO I NEED TO REMOVE THIS DEPENDENCY AND JUST MAKE MY OWN SO I CAN DO std::byte
   auto view = std::make_unique<ImageBuf>(reinterpret_cast<char *>(stream.data()) + position,
                                          reinterpret_cast<char *>(stream.data()) + stream.size());
   auto z_stream = std::make_unique<zstr::istream>(view.get());
 
-  std::vector<char> pixels(unpacked_size);
+  std::vector<std::byte> pixels(unpacked_size);
 
-  z_stream->read(pixels.data(), unpacked_size);
+  // LOL
+  z_stream->read(reinterpret_cast<char *>(pixels.data()), unpacked_size);
   return Image({type, width, height, offset_x, offset_y, bpp, unpacked_size, header_size},
                std::move(pixels));
 }
@@ -64,7 +66,7 @@ std::optional<Image> CreateImageFromRawBytes(std::span<const std::byte> &stream,
   if(!stream.data()) return std::nullopt;
   if(stream.size() != width * height * 4) return std::nullopt;
 
-  std::vector<char> pixels_raw(stream.size());
+  std::vector<std::byte> pixels_raw(stream.size());
   std::memcpy(pixels_raw.data(), stream.data(), stream.size());
 
   return Image({0, width, height, 0, 0, 0, static_cast<uint32_t>(width * height * 4), 0}, std::move(pixels_raw));

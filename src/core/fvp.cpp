@@ -1,5 +1,4 @@
 #include "fvp.hpp"
-#include "util/file_view.hpp"
 
 #include <cstdint>
 #include <format>
@@ -11,13 +10,38 @@ namespace fvp
 namespace Core
 {
 
-FVP::FVP() : save_file_directory_(""), overall_save_file_(std::vformat("{}/save/save.bin", std::make_format_args(save_file_directory_))), HCB_file_("") 
+// TODO IMPLEMENT FIND FILE, THIS IS TEMPORARY FOR TESTING!
+FVP::FVP() : save_file_directory_("./AstralAirData"), data_directory_("./AstralAirData"), overall_save_file_(std::vformat("{}/save/save.bin", std::make_format_args(save_file_directory_))), HCB_file_(std::vformat("{}/Snow.hcb", std::make_format_args(data_directory_))) 
 {}
+
+// TODO for now
+FVP FVP::Init()
+{
+  return FVP();
+}
+
 void FVP::OpenOverallSave()
 {
   if(overall_save_file_.Valid())
   {
     uint32_t ptr{};
+    memcpy(opcodes_.data() + opcode_count_, overall_save_file_.Data(), opcodes_processed_); 
+    ptr += opcodes_processed_ * sizeof(Opcode);
+
+    // These things need to get refactored into some SDL Handler later... Atleast some class should exist that can set these values. 
+    uint8_t foo{overall_save_file_.GetAndIncrement<uint8_t>(ptr)};
+    bool visible{static_cast<bool>(overall_save_file_.GetAndIncrement<uint8_t>(ptr))};
+    
+    uint32_t left_position{overall_save_file_.GetAndIncrement<uint32_t>(ptr)};
+    uint32_t top_position{overall_save_file_.GetAndIncrement<uint32_t>(ptr)};
+    
+    // TODO Handle 2nd window stuff and right position + bottom
+    uint8_t some_2nd_window_byte{overall_save_file_.GetAndIncrement<uint8_t>(ptr)}; 
+    uint8_t field_0x81{overall_save_file_.GetAndIncrement<uint8_t>(ptr)}; 
+
+    // Save preview image dimensions!!!
+    preview_save_image_width_ = overall_save_file_.GetAndIncrement<uint32_t>(ptr);
+    preview_save_image_height_ = overall_save_file_.GetAndIncrement<uint32_t>(ptr);
   }
 
   else
@@ -38,14 +62,14 @@ void FVP::OpenHCBFile()
   uint32_t foo{HCB_file_.GetAndIncrement<uint32_t>(hcb_current_file_position_)};
 
   // I think
-  uint16_t opcode_count{HCB_file_.GetAndIncrement<uint16_t>(hcb_current_file_position_)};
-  uint16_t opcodes_processed{HCB_file_.GetAndIncrement<uint16_t>(hcb_current_file_position_)};  
+  opcode_count_ = HCB_file_.GetAndIncrement<uint16_t>(hcb_current_file_position_);
+  opcodes_processed_ = HCB_file_.GetAndIncrement<uint16_t>(hcb_current_file_position_);
 
-  opcodes_.reserve(opcode_count + opcodes_processed);
+  opcodes_.reserve(opcode_count_ + opcodes_processed_);
 
   // I think this is what this byte represents, in the decomp it is read and used to scale the width, height, etc.
   uint16_t window_scaling_value{HCB_file_.GetAndIncrement<uint16_t>(hcb_current_file_position_)};
-  uint16_t game_title_size{HCB_file_.GetAndIncrement<uint16_t>(hcb_current_file_position_)};
+  uint16_t game_title_size{HCB_file_.GetAndIncrement<uint8_t>(hcb_current_file_position_)};
  
   const std::span<const std::byte> game_title{HCB_file_.Get(hcb_current_file_position_, game_title_size)};
   hcb_current_file_position_ += game_title_size;
@@ -53,8 +77,8 @@ void FVP::OpenHCBFile()
   // Now we have all the sys calls
   uint16_t syscall_count{HCB_file_.GetAndIncrement<uint16_t>(hcb_current_file_position_)}; 
 
-  // TODO
-  while(true)
+  // TODO This is not simple
+  while(false)
   {
     if(syscall_count == 0)
     {
@@ -63,50 +87,5 @@ void FVP::OpenHCBFile()
   }
 }
 
-void FVP::GetSaveInformation(uint32_t save_number)
-{
-  // Should be equivalent to _sprintf(buffer, "%s/save/s%03d.bin", save_file_directory, save_number)
-  // std format will pad the zeroes properly
-  Utility::View save(std::vformat("{}/save/s{:03}.bin", std::make_format_args(save_file_directory_, save_number)));
-  Formats::SaveInformation &save_info = save_data_array_.at(save_number);
-  uint32_t ptr{0};
-
-  save_info.year = save.Read<uint16_t>(ptr);
-  ptr += 2; 
-  save_info.month = save.Read<uint8_t>(ptr++);
-  save_info.day = save.Read<uint8_t>(ptr++);
-  save_info.day_of_week = save.Read<uint8_t>(ptr++);
-  save_info.hour = save.Read<uint8_t>(ptr++);
-  save_info.minute = save.Read<uint8_t>(ptr++);
-
-  
-  uint16_t size{};
-  size = save.Read<uint16_t>(ptr);
-  ptr += 2;
-  if(size != 0)
-  {
-    save_info.byte_stream_1 = save.Read(ptr, size + 1);
-    save_info.byte_stream_1.at(size) = static_cast<std::byte>(0);
-    ptr += size;
-  }
-
-  size = save.Read<uint16_t>(ptr);
-  ptr += 2;
-  if(size != 0)
-  {
-    save_info.byte_stream_2 = save.Read(ptr, size + 1);
-    save_info.byte_stream_2.at(size) = static_cast<std::byte>(0);
-    ptr += size;
-  }
-
-  size = save.Read<uint16_t>(ptr);
-  ptr += 2;
-  if(size != 0)
-  {
-    save_info.preview_text = save.Read(ptr, size + 1);
-    save_info.preview_text.at(size) = static_cast<std::byte>(0);
-    ptr += size;
-  }
-}
 }
 }
