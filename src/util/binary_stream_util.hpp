@@ -32,12 +32,12 @@ template <Gettable T> [[nodiscard]] T Get(const std::span<const std::byte> &stre
 
   if(offset > stream.size())
   {
-    throw std::runtime_error("Offset is larger than size");
+    throw std::out_of_range("Offset is larger than size");
   }
 
   if(offset + sizeof(T) > stream.size())
   {
-    throw std::runtime_error("Offset + template size is larger than size");
+    throw std::out_of_range("Offset + template size is larger than size");
   }
 
   T data{};
@@ -55,12 +55,12 @@ template <Gettable T> [[nodiscard]] T Get(const std::span<const std::byte> &stre
 
   if(offset > stream.size())
   {
-    throw std::runtime_error("Offset is larger than size");
+    throw std::out_of_range("Offset is larger than size");
   }
 
   if(offset + size > stream.size())
   {
-    throw std::runtime_error("Offset + template size is larger than size");
+    throw std::out_of_range("Offset + template size is larger than size");
   }
 
   return std::span<const std::byte>(stream.data() + offset, size);
@@ -68,27 +68,24 @@ template <Gettable T> [[nodiscard]] T Get(const std::span<const std::byte> &stre
 
 // Returns a std span at the specified offset and size of the data (e.g. good for strings)
 
-template <Gettable T> void Write(std::span<const std::byte> *stream, size_t offset, const T &value)
+template <Gettable T> void Write(std::span<std::byte> stream, size_t offset, const T &value)
 {
-  if(!stream || !stream->data())
+  if(!stream.data())
   {
     throw std::runtime_error("Null Stream");
   }
 
-  if(offset > stream->size())
+  if(offset > stream.size())
   {
-    throw std::runtime_error("Offset is larger than size");
+    throw std::out_of_range("Offset is larger than size");
   }
 
-  if(offset + sizeof(T) > stream->size())
+  if(offset + sizeof(T) > stream.size())
   {
-    throw std::runtime_error("Offset + template size is larger than size");
+    throw std::out_of_range("Offset + template size is larger than size");
   }
 
-  T data{};
-
-  std::memcpy(stream->data() + offset, &data, sizeof(T));
-  return data;
+  std::memcpy(stream.data() + offset, &value, sizeof(T));
 }
 
 template <std::endian E> void ConvertToEndian(std::span<std::byte> &stream)

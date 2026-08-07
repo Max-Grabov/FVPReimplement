@@ -25,7 +25,7 @@ void FVP::OpenOverallSave()
   if(overall_save_file_.Valid())
   {
     uint32_t ptr{};
-    memcpy(opcodes_.data() + opcode_count_, overall_save_file_.Data(), opcodes_processed_); 
+    memcpy(opcodes_.data() + opcode_count_, overall_save_file_.Data().data(), opcodes_processed_); 
     ptr += opcodes_processed_ * sizeof(Opcode);
 
     // These things need to get refactored into some SDL Handler later... Atleast some class should exist that can set these values. 

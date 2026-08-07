@@ -1,6 +1,7 @@
 #include "util/binary_stream_util.hpp"
 #include "gtest/gtest.h"
 
+#include <cstdint>
 #include <vector>
 
 TEST(UtilTest, TestGet)
@@ -15,6 +16,20 @@ TEST(UtilTest, TestGet)
 
   uint32_t test_value{Get<uint32_t>(t, 0)};
   EXPECT_EQ(test_value, 0x03000000);
+}
+
+TEST(UtilTest, TestWrite)
+{
+  using namespace fvp::Utility;
+
+  std::vector<std::byte> t{};
+  t.emplace_back(std::byte(0));
+  t.emplace_back(std::byte(0));
+  t.emplace_back(std::byte(0));
+  t.emplace_back(std::byte(3));
+
+  Write(t, 0, 0x61);
+  EXPECT_EQ(static_cast<uint8_t>(t[0]), 0x61);
 }
 
 TEST(UtilTest, TestConvertEndian)
