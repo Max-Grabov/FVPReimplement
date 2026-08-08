@@ -12,7 +12,7 @@ add_executable(test_suite
   persistent_file_tests.cpp
 )
 
-target_link_libraries(test_suite PUBLIC gtest gtest_main Formats Audio Image)
+target_link_libraries(test_suite PUBLIC gtest gtest_main Formats Audio Image Util)
 
 set_target_properties(test_suite 
   PROPERTIES

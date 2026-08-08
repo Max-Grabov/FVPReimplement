@@ -7,7 +7,7 @@ add_library(Audio
 
 target_include_directories(Audio PUBLIC
   ${AUDIO_SRC}
-  ${UTIL_SRC}
+  ${PROJECT_ROOT}
 )
 
 # We fetch content so users don't have to worry about installing vorbis library
@@ -21,4 +21,5 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(vorbis)
 
-target_link_libraries(Audio PRIVATE vorbis)
+target_link_libraries(Audio PRIVATE Util vorbis)
+

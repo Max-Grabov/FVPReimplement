@@ -7,7 +7,7 @@ add_library(Image
 
 target_include_directories(Image PUBLIC
   ${IMAGE_SRC}
-  ${UTIL_SRC}
+  ${PROJECT_ROOT}
 )
 
 FetchContent_Declare(
@@ -18,5 +18,5 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(ZStr)
 
-target_link_libraries(Image PUBLIC zstr::zstr)
+target_link_libraries(Image PUBLIC Util zstr::zstr)
 

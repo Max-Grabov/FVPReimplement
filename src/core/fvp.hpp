@@ -1,9 +1,10 @@
 #pragma once
 
-#include "formats/persistent_file.hpp"
 #include "formats/save_information.hpp"
+#include "util/persistent_file.hpp"
 #include "opcode.hpp"
 #include <cstdint>
+#include <optional>
 #include <string_view>
 
 namespace fvp
@@ -17,8 +18,8 @@ class FVP
 private:
   std::string_view save_file_directory_;
   std::string_view data_directory_;
-  Formats::PersistentFile overall_save_file_;
-  Formats::PersistentFile HCB_file_;
+  std::optional<Utility::PersistentFile> overall_save_file_;
+  std::optional<Utility::PersistentFile> HCB_file_;
   // This might lead to a bug, saves should start at 0 but my own saves start at 1 hmm
   std::array<Formats::SaveInformation, 999> save_data_array_;
   std::vector<Opcode> opcodes_;

@@ -19,7 +19,8 @@ add_library(Core
 
 target_include_directories(Core PUBLIC
   ${CORE_SRC}
+  ${PROJECT_ROOT}
 )
 
-target_link_libraries(Core PUBLIC Formats Image Audio SDL3::SDL3)
+target_link_libraries(Core PUBLIC Util Formats Image Audio SDL3::SDL3)
 
