@@ -1,11 +1,11 @@
 #pragma once
 
 #include <cstdint>
-#include <vector>
 #include <string>
+#include <vector>
 
-#include "util/file_view.hpp"
 #include "image/image.hpp"
+#include "util/file_view.hpp"
 
 namespace fvp
 {
@@ -36,13 +36,13 @@ inline SaveInformation GetSaveInformation(const std::string &path)
   uint32_t ptr{0};
 
   save_info.year = save.Read<uint16_t>(ptr);
-  ptr += 2; 
+  ptr += 2;
   save_info.month = save.Read<uint8_t>(ptr++);
   save_info.day = save.Read<uint8_t>(ptr++);
   save_info.day_of_week = save.Read<uint8_t>(ptr++);
   save_info.hour = save.Read<uint8_t>(ptr++);
   save_info.minute = save.Read<uint8_t>(ptr++);
- 
+
   uint16_t size{};
   size = save.Read<uint16_t>(ptr);
   ptr += 2;
@@ -86,11 +86,14 @@ inline Image::Image GetSavePreviewImage(const std::string &path, uint32_t width,
   ptr += (save.Read<uint16_t>(ptr) + 2);
 
   // Image is raw bytes, so we can just fread and create
-  auto pixels = save.Read(ptr, width * height * 4); 
+  auto pixels = save.Read(ptr, width * height * 4);
 
-  // This is safe as far as I know (narrowing the type). Image metadata as defined in zlib for full screen images fits in uint16_t
-  return Image::Image({0, static_cast<uint16_t>(width), static_cast<uint16_t>(height), 0, 0, 0, static_cast<uint32_t>(width * height * 4), 0}, std::move(pixels));
-} 
+  // This is safe as far as I know (narrowing the type). Image metadata as defined in zlib for full
+  // screen images fits in uint16_t
+  return Image::Image({0, static_cast<uint16_t>(width), static_cast<uint16_t>(height), 0, 0, 0,
+                       static_cast<uint32_t>(width * height * 4), 0},
+                      std::move(pixels));
 }
+} // namespace Formats
 
-}
+} // namespace fvp

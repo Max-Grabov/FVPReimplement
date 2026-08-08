@@ -1,6 +1,6 @@
 #include "image_decoder.hpp"
-#include "util/binary_stream_util.hpp"
 #include "image.hpp"
+#include "util/binary_stream_util.hpp"
 
 #include "zstr.hpp"
 
@@ -61,15 +61,19 @@ std::optional<Image> CreateImage(std::vector<std::byte> &&stream)
                std::move(pixels));
 }
 
-std::optional<Image> CreateImageFromRawBytes(std::span<const std::byte> &stream, uint16_t width, uint16_t height)
+std::optional<Image> CreateImageFromRawBytes(std::span<const std::byte> &stream, uint16_t width,
+                                             uint16_t height)
 {
-  if(!stream.data()) return std::nullopt;
-  if(stream.size() != width * height * 4) return std::nullopt;
+  if(!stream.data())
+    return std::nullopt;
+  if(stream.size() != width * height * 4)
+    return std::nullopt;
 
   std::vector<std::byte> pixels_raw(stream.size());
   std::memcpy(pixels_raw.data(), stream.data(), stream.size());
 
-  return Image({0, width, height, 0, 0, 0, static_cast<uint32_t>(width * height * 4), 0}, std::move(pixels_raw));
+  return Image({0, width, height, 0, 0, 0, static_cast<uint32_t>(width * height * 4), 0},
+               std::move(pixels_raw));
 }
 
 } // namespace Image

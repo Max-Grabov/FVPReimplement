@@ -7,12 +7,11 @@
 #include <cstring>
 #include <fstream>
 #include <functional>
-#include <string>
-#include <vector>
-#include <sys/stat.h>
 #include <iostream>
-#include <vector>
+#include <string>
+#include <sys/stat.h>
 #include <type_traits>
+#include <vector>
 
 namespace fvp
 {
@@ -43,11 +42,13 @@ public:
   const std::ifstream &GetFileStream() const { return file_data_; }
 
   template <typename T>
-  [[nodiscard]] T Read(const uint64_t offset, const std::function<void(std::vector<std::byte> &)> &strategy = nullptr)
+  [[nodiscard]] T Read(const uint64_t offset,
+                       const std::function<void(std::vector<std::byte> &)> &strategy = nullptr)
   {
     if(!ValidPath())
     {
-      throw std::runtime_error("Provided file path does not exist! Provided path is: " + file_name_);
+      throw std::runtime_error("Provided file path does not exist! Provided path is: " +
+                               file_name_);
     }
 
     if(offset > byte_size_)
@@ -59,7 +60,8 @@ public:
     if(offset + static_cast<T>(sizeof(T)) > byte_size_)
     {
       throw std::runtime_error("Requested read will be out of bounds, requested read is bytes " +
-                               std::to_string(offset) + " to " + std::to_string(offset + sizeof(T)));
+                               std::to_string(offset) + " to " +
+                               std::to_string(offset + sizeof(T)));
     }
 
     std::vector<std::byte> buffer(sizeof(T));
@@ -84,12 +86,14 @@ public:
     return data;
   }
 
-  [[nodiscard]] std::vector<std::byte> Read(const uint64_t offset, const uint64_t size,
-                                  const std::function<void(std::vector<std::byte> &)> &strategy = nullptr)
+  [[nodiscard]] std::vector<std::byte>
+  Read(const uint64_t offset, const uint64_t size,
+       const std::function<void(std::vector<std::byte> &)> &strategy = nullptr)
   {
     if(!ValidPath())
     {
-      throw std::runtime_error("Provided file path does not exist! Provided path is: " + file_name_);
+      throw std::runtime_error("Provided file path does not exist! Provided path is: " +
+                               file_name_);
     }
 
     if(offset > byte_size_)
@@ -138,7 +142,6 @@ public:
   bool ValidPath() const { return file_data_.is_open(); }
 };
 
-} // namespace Formats
+} // namespace Utility
 
 } // namespace fvp
-

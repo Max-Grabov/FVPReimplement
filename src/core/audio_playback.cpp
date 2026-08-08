@@ -19,9 +19,9 @@ SDL_AudioStream *CreateAudioStream(const Audio::AudioStream &stream)
   return SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, NULL, NULL);
 }
 
-void PlayAudio(
-    SDL_AudioStream *stream, const Audio::AudioStream &data_stream,
-    const std::function<void(SDL_AudioStream *, const Audio::AudioStream &)> &data_processing_strategy)
+void PlayAudio(SDL_AudioStream *stream, const Audio::AudioStream &data_stream,
+               const std::function<void(SDL_AudioStream *, const Audio::AudioStream &)>
+                   &data_processing_strategy)
 {
   // If no supplied strategy, we just dump all of the data into the stream at once
   if(!data_processing_strategy)
@@ -35,5 +35,5 @@ void PlayAudio(
   }
 }
 
-} // namespace Audio
+} // namespace Core
 } // namespace fvp

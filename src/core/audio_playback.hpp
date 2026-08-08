@@ -12,8 +12,9 @@ namespace Core
 
 SDL_AudioStream *CreateAudioStream(const Audio::AudioStream &);
 
-void PlayAudio(SDL_AudioStream *, const Audio::AudioStream &,
-               const std::function<void(SDL_AudioStream *, const Audio::AudioStream &)> & = nullptr);
+void PlayAudio(
+    SDL_AudioStream *, const Audio::AudioStream &,
+    const std::function<void(SDL_AudioStream *, const Audio::AudioStream &)> & = nullptr);
 
-} // namespace Audio
+} // namespace Core
 } // namespace fvp

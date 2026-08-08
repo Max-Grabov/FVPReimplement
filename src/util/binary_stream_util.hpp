@@ -46,7 +46,8 @@ template <Gettable T> [[nodiscard]] T Get(const std::span<const std::byte> &stre
   return data;
 }
 
-[[nodiscard]] inline std::span<const std::byte> Get(const std::span<const std::byte> &stream, size_t offset, size_t size)
+[[nodiscard]] inline std::span<const std::byte> Get(const std::span<const std::byte> &stream,
+                                                    size_t offset, size_t size)
 {
   if(!stream.data())
   {
