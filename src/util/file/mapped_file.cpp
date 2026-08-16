@@ -52,7 +52,6 @@ MappedFile::MappedFile(const std::string_view path, Permissions permissions,
   file_info_.file_size = file_stat.st_size;
 
   std::byte *buffer{nullptr};
-
   buffer = reinterpret_cast<std::byte *>(mmap(0, file_info_.file_size, PROT_READ | PROT_WRITE,
                                               MAP_SHARED, file_info_.file_descriptor, 0));
 
