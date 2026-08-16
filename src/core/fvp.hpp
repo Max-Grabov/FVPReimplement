@@ -2,7 +2,7 @@
 
 #include "formats/save_information.hpp"
 #include "opcode.hpp"
-#include "util/persistent_file.hpp"
+#include "util/file/mapped_file.hpp"
 #include <cstdint>
 #include <memory>
 #include <string_view>
@@ -18,8 +18,8 @@ class FVP
 private:
   std::string_view save_file_directory_;
   std::string_view data_directory_;
-  std::unique_ptr<Utility::PersistentFile> overall_save_file_;
-  std::unique_ptr<Utility::PersistentFile> hcb_file_;
+  std::unique_ptr<Utility::MappedFile> overall_save_file_;
+  std::unique_ptr<Utility::MappedFile> hcb_file_;
   // This might lead to a bug, saves should start at 0 but my own saves start at 1 hmm
   std::array<Formats::SaveInformation, 999> save_data_array_;
   std::vector<Opcode> opcodes_;

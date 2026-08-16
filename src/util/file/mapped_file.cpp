@@ -1,4 +1,4 @@
-#include "persistent_file.hpp"
+#include "mapped_file.hpp"
 
 #include <cerrno>
 #include <fcntl.h>
@@ -16,13 +16,10 @@ namespace fvp
 namespace Utility
 {
 
-PersistentFile::PersistentFile(const std::string_view path, Permissions permissions,
+MappedFile::MappedFile(const std::string_view path, Permissions permissions,
                                CreateFile create_file)
     : path_(path)
 {
-  // We set up the memory mapping here, if it fails, we fallback to using new to allocate a buffer,
-  // this way we don't just crash for no reason.
-  properties_.map_property = Mapped::IS_MAPPED;
   properties_.permissions = permissions;
   properties_.create_file_property = create_file;
 
@@ -49,7 +46,7 @@ PersistentFile::PersistentFile(const std::string_view path, Permissions permissi
 
   if(fstat(file_info_.file_descriptor, &file_stat) == -1)
   {
-    throw std::runtime_error(std::string("Unable to get file stats about ") + std::string(path_));
+    throw std::system_error(errno, std::generic_category(), "Unable to get file stats about " + path_);
   }
 
   file_info_.file_size = file_stat.st_size;
@@ -59,43 +56,26 @@ PersistentFile::PersistentFile(const std::string_view path, Permissions permissi
   buffer = reinterpret_cast<std::byte *>(mmap(0, file_info_.file_size, PROT_READ | PROT_WRITE,
                                               MAP_SHARED, file_info_.file_descriptor, 0));
 
-  // Fallback to new
   if(buffer == MAP_FAILED)
   {
-    buffer = nullptr;
-    properties_.map_property = Mapped::IS_NOT_MAPPED;
-    buffer = new std::byte[static_cast<size_t>(file_info_.file_size)];
-    if(!buffer)
-    {
-      throw std::runtime_error(
-          std::string("Error memory mapping and allocating a block for file data at ") + path_);
-    }
-
-    read(file_info_.file_descriptor, reinterpret_cast<void *>(buffer), sizeof(buffer));
+    throw std::system_error(errno, std::generic_category(), "Error memory mapping and allocating a block for file data at " + path_);
   }
 
   data_ = std::span<std::byte>(buffer, static_cast<size_t>(file_info_.file_size));
 };
 
-PersistentFile::~PersistentFile()
+MappedFile::~MappedFile()
 {
-  if(properties_.map_property == Mapped::IS_MAPPED)
-  {
-    munmap((reinterpret_cast<void *>(data_.data())), data_.size());
-  }
-  else
-  {
-    delete[] data_.data();
-  }
+  munmap((reinterpret_cast<void *>(data_.data())), data_.size());
 }
 
-PersistentFile::PersistentFile(PersistentFile &&other) noexcept
+MappedFile::MappedFile(MappedFile &&other) noexcept
     : data_(std::exchange(other.data_, {})), properties_(other.properties_),
       file_info_(other.file_info_), path_(std::move(other.path_))
 {
 }
 
-PersistentFile &PersistentFile::operator=(PersistentFile &&other) noexcept
+MappedFile &MappedFile::operator=(MappedFile &&other) noexcept
 {
   data_ = other.data_;
   other.data_ = {};
@@ -106,7 +86,7 @@ PersistentFile &PersistentFile::operator=(PersistentFile &&other) noexcept
   return *this;
 }
 
-void PersistentFile::Expand()
+void MappedFile::Expand()
 {
   std::byte *buffer{nullptr};
 
@@ -116,29 +96,14 @@ void PersistentFile::Expand()
                             "Unable to truncate file! File is at path: " + path_);
   }
 
-  if(properties_.map_property == Mapped::IS_MAPPED)
-  {
-    munmap(reinterpret_cast<void *>(data_.data()), data_.size());
-    buffer = reinterpret_cast<std::byte *>(mmap(0, file_info_.file_size * 2, PROT_READ | PROT_WRITE,
-                                                MAP_SHARED, file_info_.file_descriptor, 0));
+  munmap(reinterpret_cast<void *>(data_.data()), data_.size());
+  buffer = reinterpret_cast<std::byte *>(mmap(0, file_info_.file_size * 2, PROT_READ | PROT_WRITE,
+                                              MAP_SHARED, file_info_.file_descriptor, 0));
 
-    if(buffer == MAP_FAILED)
-    {
-      throw std::system_error(errno, std::generic_category(),
-                              "Unable to memmap after expanded file! File is at path: " + path_);
-    }
-  }
-  else
+  if(buffer == MAP_FAILED)
   {
-    buffer = new std::byte[static_cast<size_t>(file_info_.file_size * 2)];
-    if(!buffer)
-    {
-      throw std::system_error(errno, std::generic_category(),
-                              "Unable to alloc more after expanded file! File is at path: " +
-                                  path_);
-    }
-    memcpy(buffer, data_.data(), data_.size());
-    delete[] data_.data();
+    throw std::system_error(errno, std::generic_category(),
+                            "Unable to memmap after expanded file! File is at path: " + path_);
   }
 
   data_ = std::span<std::byte>(buffer, static_cast<size_t>(file_info_.file_size * 2));

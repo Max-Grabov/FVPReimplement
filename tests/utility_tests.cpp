@@ -1,4 +1,4 @@
-#include "util/binary_stream_util.hpp"
+#include "util/file/binary_stream_util.hpp"
 #include "gtest/gtest.h"
 
 #include <cstdint>

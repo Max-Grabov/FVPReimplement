@@ -2,7 +2,6 @@
 
 #include <cstddef>
 #include <fcntl.h>
-#include <memory>
 #include <span>
 #include <stdexcept>
 
@@ -14,7 +13,7 @@ namespace fvp
 namespace Utility
 {
 
-class PersistentFile
+class MappedFile
 {
 public:
   // These are public so users can set these
@@ -51,13 +50,6 @@ public:
   };
 
 private:
-  // Controlled on the class so it is private here
-  enum class Mapped
-  {
-    IS_MAPPED,
-    IS_NOT_MAPPED
-  };
-
   struct FileInfo
   {
     int file_descriptor;
@@ -68,7 +60,6 @@ private:
   {
     Permissions permissions;
     CreateFile create_file_property;
-    Mapped map_property;
   };
 
   using BinaryStream = std::span<std::byte>;
@@ -85,12 +76,12 @@ private:
   void Expand();
 
 public:
-  PersistentFile(const std::string_view path, Permissions permissions, CreateFile create_file);
-  ~PersistentFile();
-  PersistentFile(const PersistentFile &) = delete;
-  PersistentFile(PersistentFile &&) noexcept;
-  PersistentFile &operator=(const PersistentFile &) = delete;
-  PersistentFile &operator=(PersistentFile &&) noexcept;
+  MappedFile(const std::string_view path, Permissions permissions, CreateFile create_file);
+  ~MappedFile();
+  MappedFile(const MappedFile &) = delete;
+  MappedFile(MappedFile &&) noexcept;
+  MappedFile &operator=(const MappedFile &) = delete;
+  MappedFile &operator=(MappedFile &&) noexcept;
 
   inline ConstBinaryStream Data() const noexcept { return data_; }
 

@@ -21,5 +21,5 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(vorbis)
 
-target_link_libraries(Audio PRIVATE Util vorbis)
+target_link_libraries(Audio PRIVATE FileUtil vorbis)
 

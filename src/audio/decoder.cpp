@@ -1,6 +1,6 @@
 #include "decoder.hpp"
 #include "audio_stream.hpp"
-#include "util/binary_stream_util.hpp"
+#include "util/file/binary_stream_util.hpp"
 #include <bit>
 
 #include "vorbis/codec.h"

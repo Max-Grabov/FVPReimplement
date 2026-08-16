@@ -1,6 +1,5 @@
 #pragma once
 
-#include <concepts>
 #include <cstddef>
 #include <cstdint>
 #include <cstdio>
@@ -10,7 +9,6 @@
 #include <iostream>
 #include <string>
 #include <sys/stat.h>
-#include <type_traits>
 #include <vector>
 
 namespace fvp

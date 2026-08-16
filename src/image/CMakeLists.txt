@@ -18,5 +18,5 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(ZStr)
 
-target_link_libraries(Image PUBLIC Util zstr::zstr)
+target_link_libraries(Image PUBLIC FileUtil zstr::zstr)
 

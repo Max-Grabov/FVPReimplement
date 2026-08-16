@@ -8,7 +8,7 @@
 #include "core/fvp.hpp"
 #include "bin.hpp"
 #include "decoder.hpp"
-#include "util/file_view.hpp"
+#include "util/file/file_view.hpp"
 #include "image_decoder.hpp"
 #include "image.hpp"
 #include <vector>

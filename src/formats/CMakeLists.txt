@@ -9,4 +9,4 @@ target_include_directories(Formats PUBLIC
   ${PROJECT_ROOT}
 )
 
-target_link_libraries(Formats PRIVATE Util)
+target_link_libraries(Formats PRIVATE FileUtil)

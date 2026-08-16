@@ -1,6 +1,6 @@
 #include "image_decoder.hpp"
 #include "image.hpp"
-#include "util/binary_stream_util.hpp"
+#include "util/file/binary_stream_util.hpp"
 
 #include "zstr.hpp"
 

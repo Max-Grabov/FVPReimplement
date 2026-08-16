@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <bit>
-#include <concepts>
 #include <cstddef>
 #include <cstring>
 #include <iostream>

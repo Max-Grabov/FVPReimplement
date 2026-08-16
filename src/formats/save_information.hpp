@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "image/image.hpp"
-#include "util/file_view.hpp"
+#include "util/file/file_view.hpp"
 
 namespace fvp
 {

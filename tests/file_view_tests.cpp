@@ -1,5 +1,5 @@
-#include "util/binary_stream_util.hpp"
-#include "util/file_view.hpp"
+#include "util/file/binary_stream_util.hpp"
+#include "util/file/file_view.hpp"
 
 #include "gtest/gtest.h"
 

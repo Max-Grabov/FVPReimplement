@@ -1,5 +1,5 @@
 #include "fvp.hpp"
-#include "util/persistent_file.hpp"
+#include "util/file/mapped_file.hpp"
 
 #include <cstdint>
 #include <format>
@@ -22,10 +22,10 @@ void FVP::OpenOverallSave()
 {
   try
   {
-    overall_save_file_ = std::make_unique<Utility::PersistentFile>(
+    overall_save_file_ = std::make_unique<Utility::MappedFile>(
         std::vformat("{}/save/save.bin", std::make_format_args(save_file_directory_)),
-        Utility::PersistentFile::Permissions::READ_WRITE,
-        Utility::PersistentFile::CreateFile::NO_CREATE_FILE);
+        Utility::MappedFile::Permissions::READ_WRITE,
+        Utility::MappedFile::CreateFile::NO_CREATE_FILE);
 
     uint32_t ptr{};
     memcpy(opcodes_.data() + opcode_count_, overall_save_file_->Data().data(), opcodes_processed_);
@@ -48,7 +48,7 @@ void FVP::OpenOverallSave()
     preview_save_image_height_ = overall_save_file_->GetAndIncrement<uint32_t>(ptr);
   }
 
-  catch(Utility::PersistentFile::create_file_exception &e)
+  catch(Utility::MappedFile::create_file_exception &e)
   {
     // NEW FILE CASE
   }
@@ -59,10 +59,10 @@ void FVP::OpenOverallSave()
 
 void FVP::OpenHCBFile()
 {
-  hcb_file_ = std::make_unique<Utility::PersistentFile>(
+  hcb_file_ = std::make_unique<Utility::MappedFile>(
       std::vformat("{}/Snow.hcb", std::make_format_args(data_directory_)),
-      Utility::PersistentFile::Permissions::READ,
-      Utility::PersistentFile::CreateFile::NO_CREATE_FILE);
+      Utility::MappedFile::Permissions::READ,
+      Utility::MappedFile::CreateFile::NO_CREATE_FILE);
 
   // Syscall stuff, this is where they start
   hcb_current_file_position_ = hcb_file_->Get<uint32_t>(hcb_current_file_position_);
