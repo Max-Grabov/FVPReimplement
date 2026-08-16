@@ -19,3 +19,9 @@ TEST(EncodingTest, TestCodePointToHex)
   EXPECT_EQ(result_2[1], static_cast<std::byte>(0x81));
   EXPECT_EQ(result_2[2], static_cast<std::byte>(0x83));
 }
+
+TEST(EncodingTest, TestShiftJISKatakanaToCodePoint)
+{
+  uint16_t katakana_a{0x8341};
+  EXPECT_EQ(GetUTFCodePointFromShiftJISValue(katakana_a), 0x30A2);
+}

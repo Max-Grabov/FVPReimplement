@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bitset>
-#include <iostream>
+#include <cmath>
 #include <cstddef>
 #include <limits>
 #include <stdexcept>
@@ -29,31 +29,31 @@ namespace
 
   // inclusive start, not inclusive end
   template<size_t S>
-  static inline auto set_bits = [](std::bitset<S> &set, size_t start_index, size_t end_index, uint32_t code_point, size_t code_point_offset)
+  static inline void SetBitsFromValue(std::bitset<S> &set, size_t bit_start_index, size_t bit_end_index, uint32_t value, size_t value_bit_offset)
   {
-    if(start_index > end_index) return;
-    if(start_index >= S) return;
-    if((uint64_t{1} << (code_point_offset + end_index - start_index)) > std::numeric_limits<uint32_t>::max()) return;
+    if(bit_start_index > bit_end_index) return;
+    if(bit_start_index >= S) return;
+    if((uint64_t{1} << (value_bit_offset + bit_end_index - bit_start_index)) > std::numeric_limits<uint32_t>::max()) return;
 
-    for(size_t i{start_index}; i < end_index; ++i)
+    for(size_t i{bit_start_index}; i < bit_end_index; ++i)
     {
-      set[i] = (code_point & (uint32_t{1} << (code_point_offset + i - start_index))) != 0;
+      set[i] = (value & (uint32_t{1} << (value_bit_offset + i - bit_start_index))) != 0;
     }
   };
 
   template<BitSetGettable T, size_t S>
-  T GetType(const std::bitset<S> &set, size_t offset)
+  static inline T GetType(const std::bitset<S> &set, size_t bit_offset)
   {
-    if(S < offset + (sizeof(T) * 8))
+    if(S < bit_offset + (sizeof(T) * 8))
     {
-      throw std::out_of_range("Offset + template size is larger than size");
+      throw std::out_of_range("bit_offset + template size is larger than size");
     }
     
     T data{};
 
     for(size_t i{}; i < sizeof(T) * 8; ++i)
     {
-      if(set[i + offset])
+      if(set[i + bit_offset])
       {
         data |= 1 << i;
       }

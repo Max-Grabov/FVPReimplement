@@ -44,21 +44,23 @@ std::vector<std::byte> ConvertShiftJISToUTF8String(std::span<std::byte> stream)
 
 uint32_t GetUTFCodePointFromShiftJISValue(uint16_t shift_jis_value)
 {
+  uint32_t value{};
+
   if(shift_jis_value >= HIRAGANA_SHIFT_JIS_START_HEX && 
      shift_jis_value <= HIRAGANA_SHIFT_JIS_END_HEX)
   {
-    return (shift_jis_value - HIRAGANA_SHIFT_JIS_START_HEX) + 
+    value = (shift_jis_value - HIRAGANA_SHIFT_JIS_START_HEX) + 
       HIRAGANA_CODE_POINT_START_HEX;
   }
 
-  if(shift_jis_value >= KATAKANA_SHIFT_JIS_START_HEX && 
+  else if(shift_jis_value >= KATAKANA_SHIFT_JIS_START_HEX && 
      shift_jis_value <= KATAKANA_SHIFT_JIS_END_HEX)
   {
-    return (shift_jis_value - KATAKANA_SHIFT_JIS_START_HEX) + 
+    value = (shift_jis_value - KATAKANA_SHIFT_JIS_START_HEX) + 
       KATAKANA_CODE_POINT_START_HEX;
   }
 
-  return {};
+  return value;
 }
 
 // TODO this can cause many heap allocations, find a better solution?
@@ -71,7 +73,7 @@ std::vector<std::byte> GetUTFHexRepresentationFromCodePoint(uint32_t code_point)
 
     set[7] = false;
 
-    set_bits<8>(set, 0, 7, code_point, 0);
+    SetBitsFromValue<8>(set, 0, 7, code_point, 0);
 
     hex_representation[0] = static_cast<std::byte>(GetType<uint8_t, 8>(set, 0)); 
     return hex_representation;
@@ -89,8 +91,8 @@ std::vector<std::byte> GetUTFHexRepresentationFromCodePoint(uint32_t code_point)
     set[7] = true;
     set[6] = false;
 
-    set_bits<16>(set, 0, 6, code_point, 0);
-    set_bits<16>(set, 8, 13, code_point, 6);
+    SetBitsFromValue<16>(set, 0, 6, code_point, 0);
+    SetBitsFromValue<16>(set, 8, 13, code_point, 6);
     
     hex_representation[0] = static_cast<std::byte>(GetType<uint8_t, 16>(set, 8));
     hex_representation[1] = static_cast<std::byte>(GetType<uint8_t, 16>(set, 0));
@@ -113,9 +115,9 @@ std::vector<std::byte> GetUTFHexRepresentationFromCodePoint(uint32_t code_point)
     set[7] = true;
     set[6] = false;
 
-    set_bits<24>(set, 0, 6, code_point, 0);
-    set_bits<24>(set, 8, 14, code_point, 6);
-    set_bits<24>(set, 16, 20, code_point, 12);
+    SetBitsFromValue<24>(set, 0, 6, code_point, 0);
+    SetBitsFromValue<24>(set, 8, 14, code_point, 6);
+    SetBitsFromValue<24>(set, 16, 20, code_point, 12);
   
     hex_representation[0] = static_cast<std::byte>(GetType<uint8_t, 24>(set, 16));
     hex_representation[1] = static_cast<std::byte>(GetType<uint8_t, 24>(set, 8));
@@ -143,10 +145,10 @@ std::vector<std::byte> GetUTFHexRepresentationFromCodePoint(uint32_t code_point)
     set[7] = true;
     set[6] = false;
 
-    set_bits<32>(set, 0, 6, code_point, 0);
-    set_bits<32>(set, 8, 14, code_point, 6);
-    set_bits<32>(set, 16, 22, code_point, 12);
-    set_bits<32>(set, 24, 27, code_point, 18);
+    SetBitsFromValue<32>(set, 0, 6, code_point, 0);
+    SetBitsFromValue<32>(set, 8, 14, code_point, 6);
+    SetBitsFromValue<32>(set, 16, 22, code_point, 12);
+    SetBitsFromValue<32>(set, 24, 27, code_point, 18);
   
     hex_representation[0] = static_cast<std::byte>(GetType<uint8_t, 32>(set, 24));
     hex_representation[1] = static_cast<std::byte>(GetType<uint8_t, 32>(set, 16));
