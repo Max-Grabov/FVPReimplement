@@ -56,7 +56,7 @@ namespace
   }
 }
 
-std::vector<std::byte> ConvertShiftJISToUTF8String(std::span<std::byte> stream);
+std::vector<std::byte> ConvertShiftJISToUTF8String(std::span<const std::byte> stream);
 
 uint32_t GetUTFCodePointFromShiftJISValue(uint16_t shift_jis_value);
 

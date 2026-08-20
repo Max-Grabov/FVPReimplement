@@ -14,7 +14,7 @@ namespace fvp
 namespace Utility
 {
 
-std::vector<std::byte> ConvertShiftJISToUTF8String(std::span<std::byte> stream)
+std::vector<std::byte> ConvertShiftJISToUTF8String(std::span<const std::byte> stream)
 {
   // Most 2 byte shift jis values get turned into 3 bytes in UTF8 (e.g. 0xE382A2 for ア in UTF8 and 0x8341 in full width shift JIS)
   // Therefore we multiply by 2 to prevent any vector resizing, and then shrink to fit at the end.

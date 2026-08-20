@@ -29,9 +29,10 @@ TEST(EncodingTest, TestShiftJISKatakanaToCodePoint)
   EXPECT_EQ(GetUTFCodePointFromShiftJISValue(靴), 0x9774);
 
   // 拭、植、殖、燭、織、職、色、触、食、蝕
-  uint32_t res[10] = {0x62ed, 0x690d, 0x6b96, 0x71ed, 0x7e54, 0x8077, 0x8272, 0x89e6, 0x98df, 0x8755};
+  uint32_t res[10] = {0x62ed, 0x690d, 0x6b96, 0x71ed, 0x7e54,
+                      0x8077, 0x8272, 0x89e6, 0x98df, 0x8755};
   for(size_t i{0x9040}; i < 0x904a; ++i)
   {
-    EXPECT_EQ(GetUTFCodePointFromShiftJISValue(i), res[i - 0x9040]);  
+    EXPECT_EQ(GetUTFCodePointFromShiftJISValue(i), res[i - 0x9040]);
   }
 }

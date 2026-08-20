@@ -1,4 +1,5 @@
 #include "fvp.hpp"
+#include "util/encoding/encoding.hpp"
 #include "util/file/mapped_file.hpp"
 
 #include <cstdint>
@@ -61,8 +62,7 @@ void FVP::OpenHCBFile()
 {
   hcb_file_ = std::make_unique<Utility::MappedFile>(
       std::vformat("{}/Snow.hcb", std::make_format_args(data_directory_)),
-      Utility::MappedFile::Permissions::READ,
-      Utility::MappedFile::CreateFile::NO_CREATE_FILE);
+      Utility::MappedFile::Permissions::READ, Utility::MappedFile::CreateFile::NO_CREATE_FILE);
 
   // Syscall stuff, this is where they start
   hcb_current_file_position_ = hcb_file_->Get<uint32_t>(hcb_current_file_position_);
@@ -81,8 +81,10 @@ void FVP::OpenHCBFile()
   uint16_t window_scaling_value{hcb_file_->GetAndIncrement<uint16_t>(hcb_current_file_position_)};
   uint16_t game_title_size{hcb_file_->GetAndIncrement<uint8_t>(hcb_current_file_position_)};
 
-  const std::span<const std::byte> game_title{
+  std::span<const std::byte> game_title{
       hcb_file_->Get(hcb_current_file_position_, game_title_size)};
+
+  Utility::ConvertShiftJISToUTF8String(game_title);
   hcb_current_file_position_ += game_title_size;
 
   // Now we have all the sys calls
