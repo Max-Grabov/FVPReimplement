@@ -20,13 +20,6 @@ namespace
   template <typename T>
   concept BitSetGettable = std::is_integral_v<T> || std::is_floating_point_v<T>;
 
-  static inline constexpr uint16_t HIRAGANA_CODE_POINT_START_HEX{0x3041};
-  static inline constexpr uint16_t HIRAGANA_SHIFT_JIS_START_HEX{0x829F};
-  static inline constexpr uint16_t HIRAGANA_SHIFT_JIS_END_HEX{0x82F1};
-  static inline constexpr uint16_t KATAKANA_CODE_POINT_START_HEX{0x30A1}; 
-  static inline constexpr uint16_t KATAKANA_SHIFT_JIS_START_HEX{0x8340};
-  static inline constexpr uint16_t KATAKANA_SHIFT_JIS_END_HEX{0x8396};
-
   // inclusive start, not inclusive end
   template<size_t S>
   static inline void SetBitsFromValue(std::bitset<S> &set, size_t bit_start_index, size_t bit_end_index, uint32_t value, size_t value_bit_offset)

@@ -6,6 +6,7 @@
 #include <span>
 #include <cstdint>
 #include "encoding.hpp"
+#include "shift_jis_table.hpp"
 
 namespace fvp
 {
@@ -44,23 +45,21 @@ std::vector<std::byte> ConvertShiftJISToUTF8String(std::span<std::byte> stream)
 
 uint32_t GetUTFCodePointFromShiftJISValue(uint16_t shift_jis_value)
 {
-  uint32_t value{};
-
-  if(shift_jis_value >= HIRAGANA_SHIFT_JIS_START_HEX && 
-     shift_jis_value <= HIRAGANA_SHIFT_JIS_END_HEX)
+  static constexpr uint16_t ROW_LOWER_BOUND{0x81};
+  static constexpr uint16_t ROW_UPPER_BOUND{0xFC};
+  static constexpr uint16_t COLUMN_LOWER_BOUND{0x40};
+  static constexpr uint16_t COLUMN_UPPER_BOUND{0xBB};
+  if(((shift_jis_value >> 8) & 0xFF) < ROW_LOWER_BOUND || ((shift_jis_value >> 8) & 0xFF) > ROW_UPPER_BOUND)
   {
-    value = (shift_jis_value - HIRAGANA_SHIFT_JIS_START_HEX) + 
-      HIRAGANA_CODE_POINT_START_HEX;
+    return INVALID_LOOKUP;
   }
 
-  else if(shift_jis_value >= KATAKANA_SHIFT_JIS_START_HEX && 
-     shift_jis_value <= KATAKANA_SHIFT_JIS_END_HEX)
+  if((shift_jis_value & 0xFF) < COLUMN_LOWER_BOUND || (shift_jis_value & 0xFF) > COLUMN_UPPER_BOUND)
   {
-    value = (shift_jis_value - KATAKANA_SHIFT_JIS_START_HEX) + 
-      KATAKANA_CODE_POINT_START_HEX;
+    return INVALID_LOOKUP;
   }
 
-  return value;
+  return SHIFT_JIS_TO_UNICODE_LUT[((shift_jis_value >> 8) & 0xFF) - ROW_LOWER_BOUND][(shift_jis_value & 0xFF) - COLUMN_LOWER_BOUND];
 }
 
 // TODO this can cause many heap allocations, find a better solution?
