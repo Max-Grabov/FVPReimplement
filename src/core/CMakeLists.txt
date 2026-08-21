@@ -22,5 +22,5 @@ target_include_directories(Core PUBLIC
   ${PROJECT_ROOT}
 )
 
-target_link_libraries(Core PUBLIC FileUtil Formats Image Audio SDL3::SDL3)
+target_link_libraries(Core PUBLIC FileUtil EncodingUtil Formats Image Audio SDL3::SDL3)
 

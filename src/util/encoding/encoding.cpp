@@ -19,7 +19,8 @@ std::vector<std::byte> ConvertShiftJISToUTF8String(std::span<const std::byte> st
   // Most 2 byte shift jis values get turned into 3 bytes in UTF8 (e.g. 0xE382A2 for ア in UTF8 and 0x8341 in full width shift JIS)
   // Therefore we multiply by 2 to prevent any vector resizing, and then shrink to fit at the end.
 
-  std::vector<std::byte> utf8_string(stream.size() * 2);
+  std::vector<std::byte> utf8_string;
+  utf8_string.reserve(stream.size() * 2);
 
   for(size_t i{}; i < stream.size(); ++i)
   {
@@ -31,10 +32,17 @@ std::vector<std::byte> ConvertShiftJISToUTF8String(std::span<const std::byte> st
 
     // 2 byte length for everything else
     else
-    {
-      uint32_t code_point{GetUTFCodePointFromShiftJISValue(static_cast<uint16_t>(stream.data()[i]))};
+    {      
+      // Prevents endianness needing to be checked for systems.
+      uint32_t code_point{GetUTFCodePointFromShiftJISValue(static_cast<uint16_t>((reinterpret_cast<const uint8_t*>(stream.data())[i] << 8) + reinterpret_cast<const uint8_t*>(stream.data())[i + 1]))};
       std::vector<std::byte> converted = GetUTFHexRepresentationFromCodePoint(code_point); 
-      std::memcpy(utf8_string.data() + i, converted.data(), 2);
+
+      for(const auto b : converted)
+      {
+        utf8_string.emplace_back(b);
+      }
+
+      // Increment 1 more for the double width input
       i++;
     }
   }
@@ -48,18 +56,20 @@ uint32_t GetUTFCodePointFromShiftJISValue(uint16_t shift_jis_value)
   static constexpr uint16_t ROW_LOWER_BOUND{0x81};
   static constexpr uint16_t ROW_UPPER_BOUND{0xFC};
   static constexpr uint16_t COLUMN_LOWER_BOUND{0x40};
-  static constexpr uint16_t COLUMN_UPPER_BOUND{0xBB};
+  static constexpr uint16_t COLUMN_UPPER_BOUND{0xFC};
   if(((shift_jis_value >> 8) & 0xFF) < ROW_LOWER_BOUND || ((shift_jis_value >> 8) & 0xFF) > ROW_UPPER_BOUND)
   {
     return INVALID_LOOKUP;
   }
 
-  if((shift_jis_value & 0xFF) < COLUMN_LOWER_BOUND || (shift_jis_value & 0xFF) > COLUMN_UPPER_BOUND)
+  // In the column of the lookup table, the 0x7F column is removed causing it to skip by 1 in index, therefore 0x7f column values are invalid lookups
+  if((shift_jis_value & 0xFF) < COLUMN_LOWER_BOUND || (shift_jis_value & 0xFF) > COLUMN_UPPER_BOUND || (shift_jis_value & 0xFF) == 0x7F)
   {
     return INVALID_LOOKUP;
   }
 
-  return SHIFT_JIS_TO_UNICODE_LUT[((shift_jis_value >> 8) & 0xFF) - ROW_LOWER_BOUND][(shift_jis_value & 0xFF) - COLUMN_LOWER_BOUND];
+  // also due to the 0x7f row not being included, we have to subtract an extra 1 if our index is greater than 0x7f so we can lookup properly
+  return SHIFT_JIS_TO_UNICODE_LUT[((shift_jis_value >> 8) & 0xFF) - ROW_LOWER_BOUND][(shift_jis_value & 0xFF) - COLUMN_LOWER_BOUND - ((shift_jis_value & 0xFF) > 0x7F ? 1 : 0)];
 }
 
 // TODO this can cause many heap allocations, find a better solution?
