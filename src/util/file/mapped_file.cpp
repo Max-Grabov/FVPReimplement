@@ -16,8 +16,7 @@ namespace fvp
 namespace Utility
 {
 
-MappedFile::MappedFile(const std::string_view path, Permissions permissions,
-                               CreateFile create_file)
+MappedFile::MappedFile(const std::string_view path, Permissions permissions, CreateFile create_file)
     : path_(path)
 {
   properties_.permissions = permissions;
@@ -46,7 +45,8 @@ MappedFile::MappedFile(const std::string_view path, Permissions permissions,
 
   if(fstat(file_info_.file_descriptor, &file_stat) == -1)
   {
-    throw std::system_error(errno, std::generic_category(), "Unable to get file stats about " + path_);
+    throw std::system_error(errno, std::generic_category(),
+                            "Unable to get file stats about " + path_);
   }
 
   file_info_.file_size = file_stat.st_size;
@@ -57,16 +57,15 @@ MappedFile::MappedFile(const std::string_view path, Permissions permissions,
 
   if(buffer == MAP_FAILED)
   {
-    throw std::system_error(errno, std::generic_category(), "Error memory mapping and allocating a block for file data at " + path_);
+    throw std::system_error(errno, std::generic_category(),
+                            "Error memory mapping and allocating a block for file data at " +
+                                path_);
   }
 
   data_ = std::span<std::byte>(buffer, static_cast<size_t>(file_info_.file_size));
 };
 
-MappedFile::~MappedFile()
-{
-  munmap((reinterpret_cast<void *>(data_.data())), data_.size());
-}
+MappedFile::~MappedFile() { munmap((reinterpret_cast<void *>(data_.data())), data_.size()); }
 
 MappedFile::MappedFile(MappedFile &&other) noexcept
     : data_(std::exchange(other.data_, {})), properties_(other.properties_),
