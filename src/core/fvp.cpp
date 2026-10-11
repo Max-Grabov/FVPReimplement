@@ -1,7 +1,5 @@
 #include "fvp.hpp"
 
-#include "SDL3/SDL_mouse.h"
-#include "SDL3/SDL_video.h"
 #include "audio/audio_stream.hpp"
 #include "audio/decoder.hpp"
 #include "audio_playback.hpp"
@@ -18,8 +16,10 @@
 #include "SDL3/SDL_audio.h"
 #include "SDL3/SDL_events.h"
 #include "SDL3/SDL_init.h"
+#include "SDL3/SDL_mouse.h"
 #include "SDL3/SDL_rect.h"
 #include "SDL3/SDL_render.h"
+#include "SDL3/SDL_video.h"
 
 #include <cstdint>
 #include <format>
