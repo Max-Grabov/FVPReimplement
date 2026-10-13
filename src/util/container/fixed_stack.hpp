@@ -27,6 +27,8 @@ private:
   
 public:
   FixedStack() : buffer_(), current_head_(), currently_filled_() {}
+  // For Save stuff to just create one from known values
+  FixedStack(FixedBuffer &&buffer, size_t current_head, size_t currently_filled) : buffer_(std::move(buffer)), current_head_(current_head), currently_filled_(currently_filled) {}
   ~FixedStack() = default;
   FixedStack(const FixedStack &other) = default;
   FixedStack &operator=(const FixedStack &other) = default;

@@ -1,3 +1,4 @@
+#include <bit>
 #include <vector>
 
 #include "engine/backlog_entry.hpp"
@@ -6,6 +7,7 @@
 #include "util/container/fixed_stack.hpp"
 #include "util/file/mapped_file.hpp"
 
+// &ptr is the position where we should grab. These are meant to be used to just call in succession when we need to load a new save.
 namespace fvp
 {
 
@@ -15,22 +17,18 @@ namespace Core
 // Should be equivalent to _sprintf(buffer, "%s/save/s%03d.bin", save_file_directory, save_number)
 // std format will pad the zeroes properly
 // std::vformat("{}/save/s{:03}.bin", std::make_format_args(save_file_directory_, save_number))
-inline SaveInformation GetSaveInformation(const Utility::MappedFile &save_file, size_t starting_byte)
+inline SaveInformation GetSaveInformation(const Utility::MappedFile &save_file, size_t &ptr)
 {
   SaveInformation save_info;
-  size_t ptr{starting_byte};
-
-  save_info.year = save_file.Get<std::endian::little, uint16_t>(ptr);
-  ptr += 2;
-  save_info.month = save_file.Get<std::endian::little, uint8_t>(ptr++);
-  save_info.day = save_file.Get<std::endian::little, uint8_t>(ptr++);
-  save_info.day_of_week = save_file.Get<std::endian::little, uint8_t>(ptr++);
-  save_info.hour = save_file.Get<std::endian::little, uint8_t>(ptr++);
-  save_info.minute = save_file.Get<std::endian::little, uint8_t>(ptr++);
+  save_info.year = save_file.GetAndIncrement<std::endian::little, uint16_t>(ptr);
+  save_info.month = save_file.GetAndIncrement<std::endian::little, uint8_t>(ptr);
+  save_info.day = save_file.GetAndIncrement<std::endian::little, uint8_t>(ptr);
+  save_info.day_of_week = save_file.GetAndIncrement<std::endian::little, uint8_t>(ptr);
+  save_info.hour = save_file.GetAndIncrement<std::endian::little, uint8_t>(ptr);
+  save_info.minute = save_file.GetAndIncrement<std::endian::little, uint8_t>(ptr);
 
   uint16_t size{};
-  size = save_file.Get<std::endian::little, uint16_t>(ptr);
-  ptr += 2;
+  size = save_file.GetAndIncrement<std::endian::little, uint16_t>(ptr);
   if(size != 0)
   {
     auto data = save_file.Get(ptr, size + 1);
@@ -39,8 +37,7 @@ inline SaveInformation GetSaveInformation(const Utility::MappedFile &save_file, 
     ptr += size;
   }
 
-  size = save_file.Get<std::endian::little, uint16_t>(ptr);
-  ptr += 2;
+  size = save_file.GetAndIncrement<std::endian::little, uint16_t>(ptr);
   if(size != 0)
   {
     auto data = save_file.Get(ptr, size + 1);
@@ -49,8 +46,7 @@ inline SaveInformation GetSaveInformation(const Utility::MappedFile &save_file, 
     ptr += size;
   }
 
-  size = save_file.Get<std::endian::little, uint16_t>(ptr);
-  ptr += 2;
+  size = save_file.GetAndIncrement<std::endian::little, uint16_t>(ptr);
   if(size != 0)
   {
     auto data = save_file.Get(ptr, size + 1);
@@ -62,11 +58,10 @@ inline SaveInformation GetSaveInformation(const Utility::MappedFile &save_file, 
   return save_info;
 }
 
-inline Image::Image GetSavePreviewImage(const Utility::MappedFile &save_file, uint32_t width, uint32_t height, size_t starting_byte)
+inline Image::Image GetSavePreviewImage(const Utility::MappedFile &save_file, uint32_t width, uint32_t height, size_t &ptr)
 {
   // We read size data until the image data
   // This goes through all the save metadata
-  size_t ptr{starting_byte};
   ptr += (save_file.Get<std::endian::little, uint16_t>(ptr) + 2);
   ptr += (save_file.Get<std::endian::little, uint16_t>(ptr) + 2);
   ptr += (save_file.Get<std::endian::little, uint16_t>(ptr) + 2);
@@ -81,9 +76,38 @@ inline Image::Image GetSavePreviewImage(const Utility::MappedFile &save_file, ui
                       std::vector<std::byte>(pixels.data(), pixels.data() + pixels.size()));
 }
 
-inline Utility::FixedStack<BacklogEntry, 100> GetBacklog(const Utility::MappedFile &save_file, size_t starting_byte)
+inline Utility::FixedStack<BacklogEntry, 100> GetBacklog(const Utility::MappedFile &save_file, size_t &ptr)
 {
-  
+  constexpr size_t backlog_total_entries{100};
+  size_t currently_filled{save_file.GetAndIncrement<std::endian::little, size_t>(ptr)};
+  size_t current_head{save_file.GetAndIncrement<std::endian::little, size_t>(ptr)};
+
+  BacklogEntry backlog[backlog_total_entries];
+
+  uint32_t size_holder{};
+  for(size_t i{}; i < backlog_total_entries; ++i)
+  {
+    // Speaker
+    size_holder = save_file.GetAndIncrement<std::endian::little, uint32_t>(ptr); 
+    if(size_holder != 0)
+    {
+      backlog[i].speaker = save_file.Get(ptr, size_holder);
+    }
+    ptr += size_holder; 
+
+    // Spoken Text
+    size_holder = save_file.GetAndIncrement<std::endian::little, uint32_t>(ptr); 
+    if(size_holder != 0)
+    {
+      backlog[i].spoken_text = save_file.Get(ptr, size_holder);
+    }
+    ptr += size_holder;
+
+    // Some ID?
+    backlog[i].maybe_text_id = save_file.GetAndIncrement<std::endian::little, uint32_t>(ptr);
+  }
+
+  return Utility::FixedStack<BacklogEntry, backlog_total_entries>(std::move(backlog), current_head, currently_filled);
 }
 
 }
