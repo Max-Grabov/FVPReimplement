@@ -75,20 +75,30 @@ public:
     return operator[](index);
   }
 
-  constexpr void push()
+  // Copy the object passed to the stack
+  constexpr void push(const T& object)
   {
     current_head_ = (current_head_ + 1) % Size; 
-    currently_filled_ = currently_filled_ + (currently_filled_ != Size);
-    buffer_[current_head_] = {};
+    currently_filled_ = currently_filled_ + (currently_filled_ != Size); 
+    buffer_[current_head_] = object;
   }
 
+  // Construct an object in place using the arguments passed
   template<typename ...Args>
-  constexpr void push(Args&&... args)
+  constexpr void emplace(Args&&... args)
   {
     current_head_ = (current_head_ + 1) % Size; 
     currently_filled_ = currently_filled_ + (currently_filled_ != Size);
     std::construct_at(&buffer_[current_head_], std::forward<Args>(args)...); 
   } 
+
+  // Move an object to the stack
+  constexpr void emplace(T &&object)
+  {
+    current_head_ = (current_head_ + 1) % Size; 
+    currently_filled_ = currently_filled_ + (currently_filled_ != Size); 
+    buffer_[current_head_] = std::move(object);
+  }
 
   constexpr void pop()
   {
