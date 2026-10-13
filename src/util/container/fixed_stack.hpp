@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include <cstddef>
 #include <memory>
 #include <stdexcept>
 #include <utility>
@@ -11,7 +11,8 @@ namespace fvp
 namespace Utility
 {
 
-template<typename T, std::size_t Size>
+// This is what I interpret to be the way the History in the game works with regards to speakers and the text they say (e.g. the backlog)
+template<typename T, size_t Size>
 class FixedStack
 {
 public:
@@ -21,20 +22,33 @@ public:
 private:
   // We use a C-style array as the buffer on the stack
   FixedBuffer buffer_;
-  std::size_t current_head_;
+  size_t current_head_;
+  size_t currently_filled_;
   
 public:
-  FixedStack() : buffer_(), current_head_() {}
+  FixedStack() : buffer_(), current_head_(), currently_filled_() {}
+  ~FixedStack() = default;
+  FixedStack(const FixedStack &other) = default;
+  FixedStack &operator=(const FixedStack &other) = default;
+  FixedStack(FixedStack &&other) noexcept = default;
+  FixedStack &operator=(FixedStack &&other) noexcept = default; 
 
   // This Operator gets the amount back from the head (e.g. a stack), So if head is at index 4, and we use [1] here, we get value at index 3 
-  constexpr T& operator[](std::size_t index) const
+  // It does not perform bounds checking in regards to what is currently filled, it does however convert indices that must wrap around the buffer (e.g. [10] at head=5 must go wrap around)
+  constexpr T& operator[](size_t index) noexcept
   {
-    if (index >= Size)
+    size_t index_to_grab{current_head_};
+    if(index > index_to_grab)
     {
-      throw std::out_of_range("index supplied is greater than buffer size");
-    }
+      index_to_grab += Size; 
+    } 
 
-    std::size_t index_to_grab{current_head_};
+    return buffer_[(index_to_grab - index) % Size];
+  }
+  
+  constexpr const T& operator[](size_t index) const noexcept
+  {
+    size_t index_to_grab{current_head_};
     if(index > index_to_grab)
     {
       index_to_grab += Size; 
@@ -43,9 +57,28 @@ public:
     return buffer_[(index_to_grab - index) % Size];
   }
 
+  constexpr T& at(size_t index)
+  {
+    if (index >= currently_filled_)
+    {
+      throw std::out_of_range("index supplied is greater than buffer size");
+    }
+    return operator[](index);
+  }
+
+  constexpr const T& at(size_t index) const
+  {
+    if (index >= currently_filled_)
+    {
+      throw std::out_of_range("index supplied is greater than buffer size");
+    }
+    return operator[](index);
+  }
+
   constexpr void push()
   {
     current_head_ = (current_head_ + 1) % Size; 
+    currently_filled_ = currently_filled_ + (currently_filled_ != Size);
     buffer_[current_head_] = {};
   }
 
@@ -53,11 +86,17 @@ public:
   constexpr void push(Args&&... args)
   {
     current_head_ = (current_head_ + 1) % Size; 
+    currently_filled_ = currently_filled_ + (currently_filled_ != Size);
     std::construct_at(&buffer_[current_head_], std::forward<Args>(args)...); 
   } 
 
   constexpr void pop()
   {
+    if(currently_filled_ == 0)
+    {
+      throw std::out_of_range("Attempting to pop a value from empty fixed stack!");
+    }
+
     buffer_[current_head_] = {}; 
 
     // Wrap around if value is at 0
@@ -69,12 +108,19 @@ public:
     {
       current_head_ = Size - 1;
     }
+
+    currently_filled_--;
   };
 
   constexpr T top() const
   {
     return buffer_[current_head_];
-  }  
+  } 
+
+  size_t size() const 
+  {
+    return currently_filled_;
+  }
 };
 }
 }

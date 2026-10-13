@@ -29,3 +29,5 @@ Then:
 
 `cmake --build <desired-output-folder>`
 
+### AI-Usage
+This is a personal hobby project, and as such I just want to work on it on my own. The extent of AI Usage is looking up information from the internet, and generating a single lookuptable in the util/ directory from a website. I use enough AI at work that I just want to code myself sometimes :)

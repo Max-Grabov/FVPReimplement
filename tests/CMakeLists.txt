@@ -11,9 +11,10 @@ add_executable(test_suite
   image_tests.cpp
   mapped_file_tests.cpp
   encoding_tests.cpp
+  fixed_stack_tests.cpp
 )
 
-target_link_libraries(test_suite PUBLIC gtest gtest_main Formats Audio Image FileUtil EncodingUtil)
+target_link_libraries(test_suite PUBLIC gtest gtest_main Formats Audio Image FileUtil EncodingUtil ContainerUtil)
 
 set_target_properties(test_suite 
   PROPERTIES
