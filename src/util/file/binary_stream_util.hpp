@@ -19,8 +19,9 @@ namespace Utility
 {
 
 // Returns a value that is memcopied from the span's pointed memory at the offset specified.
-// Endian template parameter passed to grab with the specified endianness 
-template <Gettable T, std::endian E> [[nodiscard]] T Get(const std::span<const std::byte> &stream, size_t offset)
+// Endian template parameter passed to grab with the specified endianness
+template <Gettable T, std::endian E>
+[[nodiscard]] T Get(const std::span<const std::byte> &stream, size_t offset)
 {
   if(!stream.data())
   {
@@ -71,7 +72,8 @@ template <Gettable T, std::endian E> [[nodiscard]] T Get(const std::span<const s
   return std::span<const std::byte>(stream.data() + offset, size);
 }
 
-template <Gettable T> void Write(std::span<std::byte> stream, size_t offset, const T &value)
+template <Gettable T>
+void Write(std::span<std::byte> stream, size_t offset, const T &value)
 {
   if(!stream.data())
   {

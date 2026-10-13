@@ -7,7 +7,8 @@
 #include "util/container/fixed_stack.hpp"
 #include "util/file/mapped_file.hpp"
 
-// &ptr is the position where we should grab. These are meant to be used to just call in succession when we need to load a new save.
+// &ptr is the position where we should grab. These are meant to be used to just call in succession
+// when we need to load a new save.
 namespace fvp
 {
 
@@ -58,7 +59,8 @@ inline SaveInformation GetSaveInformation(const Utility::MappedFile &save_file, 
   return save_info;
 }
 
-inline Image::Image GetSavePreviewImage(const Utility::MappedFile &save_file, uint32_t width, uint32_t height, size_t &ptr)
+inline Image::Image GetSavePreviewImage(const Utility::MappedFile &save_file, uint32_t width,
+                                        uint32_t height, size_t &ptr)
 {
   // We read size data until the image data
   // This goes through all the save metadata
@@ -76,7 +78,8 @@ inline Image::Image GetSavePreviewImage(const Utility::MappedFile &save_file, ui
                       std::vector<std::byte>(pixels.data(), pixels.data() + pixels.size()));
 }
 
-inline Utility::FixedStack<BacklogEntry, 100> GetBacklog(const Utility::MappedFile &save_file, size_t &ptr)
+inline Utility::FixedStack<BacklogEntry, 100> GetBacklog(const Utility::MappedFile &save_file,
+                                                         size_t &ptr)
 {
   constexpr size_t backlog_total_entries{100};
   size_t currently_filled{save_file.GetAndIncrement<std::endian::little, size_t>(ptr)};
@@ -88,15 +91,15 @@ inline Utility::FixedStack<BacklogEntry, 100> GetBacklog(const Utility::MappedFi
   for(size_t i{}; i < backlog_total_entries; ++i)
   {
     // Speaker
-    size_holder = save_file.GetAndIncrement<std::endian::little, uint32_t>(ptr); 
+    size_holder = save_file.GetAndIncrement<std::endian::little, uint32_t>(ptr);
     if(size_holder != 0)
     {
       backlog[i].speaker = save_file.Get(ptr, size_holder);
     }
-    ptr += size_holder; 
+    ptr += size_holder;
 
     // Spoken Text
-    size_holder = save_file.GetAndIncrement<std::endian::little, uint32_t>(ptr); 
+    size_holder = save_file.GetAndIncrement<std::endian::little, uint32_t>(ptr);
     if(size_holder != 0)
     {
       backlog[i].spoken_text = save_file.Get(ptr, size_holder);
@@ -107,8 +110,9 @@ inline Utility::FixedStack<BacklogEntry, 100> GetBacklog(const Utility::MappedFi
     backlog[i].maybe_text_id = save_file.GetAndIncrement<std::endian::little, uint32_t>(ptr);
   }
 
-  return Utility::FixedStack<BacklogEntry, backlog_total_entries>(std::move(backlog), current_head, currently_filled);
+  return Utility::FixedStack<BacklogEntry, backlog_total_entries>(std::move(backlog), current_head,
+                                                                  currently_filled);
 }
 
-}
-}
+} // namespace Core
+} // namespace fvp

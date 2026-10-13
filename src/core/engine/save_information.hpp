@@ -22,5 +22,5 @@ struct SaveInformation
   uint8_t hour;
   uint8_t minute;
 };
-}
-}
+} // namespace Core
+} // namespace fvp

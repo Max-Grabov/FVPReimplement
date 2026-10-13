@@ -76,19 +76,21 @@ private:
   void Expand();
 
 public:
-  MappedFile(const std::string_view path, Permissions permissions = Permissions::READ, CreateFile create_file = CreateFile::NO_CREATE_FILE);
+  MappedFile(const std::string_view path, Permissions permissions = Permissions::READ,
+             CreateFile create_file = CreateFile::NO_CREATE_FILE);
   ~MappedFile();
   MappedFile(const MappedFile &) = delete;
   MappedFile(MappedFile &&) noexcept;
   MappedFile &operator=(const MappedFile &) = delete;
   MappedFile &operator=(MappedFile &&) noexcept;
 
-  inline ConstBinaryStream Data() const noexcept { return data_; } 
+  inline ConstBinaryStream Data() const noexcept { return data_; }
 
   // Should be a size_t parameter, but not sure if I will need to use integers, shorts etc. This way
   // atleast it allows those types and allows for checks to ensure no negative values
   // std::endian comes first due to template resolution
-  template <std::endian E, Gettable T, typename P> [[nodiscard]] inline T Get(P offset) const
+  template <std::endian E, Gettable T, typename P>
+  [[nodiscard]] inline T Get(P offset) const
   {
     static_assert(std::is_integral_v<P>);
     if(offset < 0)
@@ -96,15 +98,17 @@ public:
     return Utility::Get<T, E>(data_, offset);
   }
 
-  template <typename P> [[nodiscard]] inline ConstBinaryStream Get(P offset, size_t size) const
+  template <typename P>
+  [[nodiscard]] inline ConstBinaryStream Get(P offset, size_t size) const
   {
     static_assert(std::is_integral_v<P>);
     if(offset < 0)
       return {};
     return Utility::Get(data_, offset, size);
-  } 
+  }
 
-  template <std::endian E, Gettable T, typename P> [[nodiscard]] inline T GetAndIncrement(P &offset) const
+  template <std::endian E, Gettable T, typename P>
+  [[nodiscard]] inline T GetAndIncrement(P &offset) const
   {
     static_assert(std::is_integral_v<P>);
     T value{Get<E, T>(offset)};
@@ -112,7 +116,8 @@ public:
     return value;
   }
 
-  template <Gettable T> inline void Write(size_t offset, const T &value)
+  template <Gettable T>
+  inline void Write(size_t offset, const T &value)
   {
     if(properties_.permissions < Permissions::READ_WRITE)
     {

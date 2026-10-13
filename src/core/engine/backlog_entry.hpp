@@ -1,6 +1,6 @@
-#include <span>
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
+#include <span>
 
 namespace fvp
 {

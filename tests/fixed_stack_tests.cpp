@@ -4,7 +4,7 @@
 
 TEST(FixedStackTest, TestPush)
 {
-  using namespace fvp::Utility; 
+  using namespace fvp::Utility;
   FixedStack<int, 5> stk;
 
   // This should wrap around and overwrite 0 and 1, but our size should be 5 still
@@ -26,15 +26,15 @@ TEST(FixedStackTest, TestPush)
   EXPECT_EQ(stk[0], 4);
   EXPECT_EQ(stk[1], 3);
   EXPECT_EQ(stk[2], 2);
-  
+
   // 99 0 2 3 4
   stk.push(99);
-  EXPECT_EQ(stk[0], 99); 
+  EXPECT_EQ(stk[0], 99);
 }
 
 TEST(FixedStackTest, TestSize)
 {
-  using namespace fvp::Utility; 
+  using namespace fvp::Utility;
   FixedStack<int, 5> stk;
 
   // This should wrap around and overwrite 0 and 1, but our size should be 5 still
@@ -64,11 +64,11 @@ TEST(FixedStackTest, TestSize)
 
 TEST(FixedStackTest, TestEmplace)
 {
-  using namespace fvp::Utility; 
+  using namespace fvp::Utility;
   struct Foo
   {
     int a;
-    int b; 
+    int b;
   };
 
   FixedStack<Foo, 5> stk;
@@ -77,7 +77,7 @@ TEST(FixedStackTest, TestEmplace)
   // 5 6 2 3 4
   for(int i = 0; i < 7; ++i)
   {
-    stk.emplace(i, i+1);
+    stk.emplace(i, i + 1);
   }
 
   EXPECT_EQ(stk[0].a, 6);
@@ -90,7 +90,7 @@ TEST(FixedStackTest, TestEmplace)
   EXPECT_EQ(stk[3].b, 4);
   EXPECT_EQ(stk[4].a, 2);
   EXPECT_EQ(stk[4].b, 3);
-  
+
   Foo foo{99, 100};
 
   stk.emplace(foo);
@@ -100,7 +100,7 @@ TEST(FixedStackTest, TestEmplace)
 
 TEST(FixedStackTest, TestAt)
 {
-  using namespace fvp::Utility; 
+  using namespace fvp::Utility;
   FixedStack<int, 5> stk;
 
   // 5 6 2 3 4
@@ -125,10 +125,10 @@ TEST(FixedStackTest, TestAt)
   EXPECT_THROW(stk.at(3), std::out_of_range);
   EXPECT_THROW(stk.at(4), std::out_of_range);
   EXPECT_THROW(stk.at(5), std::out_of_range);
-  
+
   // 99 0 2 3 4
   stk.push(99);
-  EXPECT_EQ(stk.at(0), 99); 
+  EXPECT_EQ(stk.at(0), 99);
   EXPECT_THROW(stk.at(4), std::out_of_range);
   EXPECT_THROW(stk.at(5), std::out_of_range);
 
@@ -138,4 +138,3 @@ TEST(FixedStackTest, TestAt)
   stk.pop();
   EXPECT_THROW(stk.at(0), std::out_of_range);
 }
-

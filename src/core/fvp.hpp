@@ -1,9 +1,9 @@
 #pragma once
 
 #include "cursor.hpp"
+#include "engine/save_information.hpp"
 #include "engine/screen_mode.hpp"
 #include "engine/syscall_entry.hpp"
-#include "engine/save_information.hpp"
 #include "render_window.hpp"
 #include "util/file/mapped_file.hpp"
 

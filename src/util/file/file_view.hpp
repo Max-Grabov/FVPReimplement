@@ -65,7 +65,7 @@ public:
 
     T data{};
     file_data_.read(reinterpret_cast<char *>(&data), sizeof(T));
-    
+
     if constexpr(std::endian::native == E)
     {
       std::reverse(reinterpret_cast<std::byte *>(&data),
@@ -74,8 +74,7 @@ public:
     return data;
   }
 
-  [[nodiscard]] std::vector<std::byte>
-  Read(const uint64_t offset, const uint64_t size)
+  [[nodiscard]] std::vector<std::byte> Read(const uint64_t offset, const uint64_t size)
   {
     if(!ValidPath())
     {
