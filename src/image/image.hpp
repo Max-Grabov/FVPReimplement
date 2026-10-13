@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <span>
 #include <vector>
 
 namespace fvp
@@ -27,7 +28,8 @@ private:
   std::vector<std::byte> pixels_;
 
 public:
-  Image(const ImageMetaData &, std::vector<std::byte> &&);
+  Image(const ImageMetaData &, std::vector<std::byte> &&pixels);
+  Image(const ImageMetaData &, std::vector<std::byte> &pixels);
   void PrintImageMetaData() const;
 
   const ImageMetaData &GetMetaData() const;

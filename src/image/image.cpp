@@ -13,6 +13,11 @@ Image::Image(const ImageMetaData &meta_data, std::vector<std::byte> &&pixels)
 {
 }
 
+Image::Image(const ImageMetaData &meta_data, std::vector<std::byte> &pixels)
+    : meta_data_(meta_data), pixels_(pixels)
+{
+}
+
 void Image::PrintImageMetaData() const
 {
   auto print_all = [](const auto &...params) { ((std::cout << params << "\n"), ...); };
