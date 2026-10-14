@@ -17,9 +17,9 @@ TEST(AudioTest, DecodeTest)
 
   View voice_view("./AstralAirData/voice.bin");
   std::vector<std::byte> query =
-      voice_view.Read(8 + voice_view.Read<uint32_t, std::endian::big>(0) * 12 +
-                          voice_view.Read<uint32_t, std::endian::big>(8),
-                      9);
+    voice_view.Read(8 + voice_view.Read<uint32_t, std::endian::big>(0) * 12 +
+                      voice_view.Read<uint32_t, std::endian::big>(8),
+                    9);
 
   auto result = bin.GetChunk(query);
   std::optional<AudioStream> stream = DecodeOggContainer(result);
@@ -46,17 +46,17 @@ TEST(AudioTest, WAVDecodeTest)
   View se_view("./AstralAirData/se.bin");
 
   std::vector<std::byte> sys_query =
-      se_sys_view.Read(8 + se_sys_view.Read<uint32_t, std::endian::big>(0) * 12 +
-                           se_sys_view.Read<uint32_t, std::endian::big>(8),
-                       3);
+    se_sys_view.Read(8 + se_sys_view.Read<uint32_t, std::endian::big>(0) * 12 +
+                       se_sys_view.Read<uint32_t, std::endian::big>(8),
+                     3);
   std::vector<std::byte> env_query =
-      se_env_view.Read(8 + se_env_view.Read<uint32_t, std::endian::big>(0) * 12 +
-                           se_env_view.Read<uint32_t, std::endian::big>(8),
-                       3);
+    se_env_view.Read(8 + se_env_view.Read<uint32_t, std::endian::big>(0) * 12 +
+                       se_env_view.Read<uint32_t, std::endian::big>(8),
+                     3);
   std::vector<std::byte> se_query =
-      se_view.Read(8 + se_view.Read<uint32_t, std::endian::big>(0) * 12 +
-                       se_view.Read<uint32_t, std::endian::big>(8),
-                   3);
+    se_view.Read(8 + se_view.Read<uint32_t, std::endian::big>(0) * 12 +
+                   se_view.Read<uint32_t, std::endian::big>(8),
+                 3);
 
   std::optional<AudioStream> sys_stream = DecodeWAV(sys_bin.GetChunk(sys_query));
   std::optional<AudioStream> env_stream = DecodeWAV(env_bin.GetChunk(env_query));

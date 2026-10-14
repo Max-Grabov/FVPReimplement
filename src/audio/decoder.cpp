@@ -96,7 +96,7 @@ std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
   uint32_t pad_value{Utility::Get<uint32_t, std::endian::big>(input_buffer, 114)};
 
   if(uint32_t data_string{
-         Utility::Get<uint32_t, std::endian::little>(input_buffer, 118 + pad_value)};
+       Utility::Get<uint32_t, std::endian::little>(input_buffer, 118 + pad_value)};
      data_string != 0x64617461)
   {
     return std::nullopt;
@@ -119,8 +119,8 @@ std::optional<AudioStream> DecodeWAV(std::vector<std::byte> &&input_buffer)
     pcm[i] = *reinterpret_cast<int16_t *>(input_buffer.data() + pad_value + 118 + 4 + 4 + 2 * i) /
              32768.0f;
     pcm[i + 1] =
-        *reinterpret_cast<int16_t *>(input_buffer.data() + pad_value + 118 + 4 + 4 + 2 * (i + 1)) /
-        32768.0f;
+      *reinterpret_cast<int16_t *>(input_buffer.data() + pad_value + 118 + 4 + 4 + 2 * (i + 1)) /
+      32768.0f;
   }
 
   return AudioStream(std::move(pcm), channels, rate);

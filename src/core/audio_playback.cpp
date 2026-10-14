@@ -21,7 +21,7 @@ SDL_AudioStream *CreateAudioStream(const Audio::AudioStream &stream)
 
 void PlayAudio(SDL_AudioStream *stream, const Audio::AudioStream &data_stream,
                const std::function<void(SDL_AudioStream *, const Audio::AudioStream &)>
-                   &data_processing_strategy)
+                 &data_processing_strategy)
 {
   // If no supplied strategy, we just dump all of the data into the stream at once
   if(!data_processing_strategy)

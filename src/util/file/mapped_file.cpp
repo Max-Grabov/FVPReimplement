@@ -23,8 +23,8 @@ MappedFile::MappedFile(const std::string_view path, Permissions permissions, Cre
   properties_.create_file_property = create_file;
 
   file_info_.file_descriptor =
-      open(path_.data(),
-           O_RDWR | (properties_.create_file_property == CreateFile::CREATE_FILE ? O_CREAT : 0));
+    open(path_.data(),
+         O_RDWR | (properties_.create_file_property == CreateFile::CREATE_FILE ? O_CREAT : 0));
 
   if(file_info_.file_descriptor == -1)
   {
@@ -32,7 +32,7 @@ MappedFile::MappedFile(const std::string_view path, Permissions permissions, Cre
     if(errno == ENOENT)
     {
       throw create_file_exception(
-          "File does not exist, but CreateFile::NO_CREATE_FILE was passed!");
+        "File does not exist, but CreateFile::NO_CREATE_FILE was passed!");
     }
 
     // Other ones
@@ -53,14 +53,14 @@ MappedFile::MappedFile(const std::string_view path, Permissions permissions, Cre
 
   std::byte *buffer{nullptr};
   buffer =
-      reinterpret_cast<std::byte *>(mmap(0, file_info_.file_size, PROT_READ | PROT_WRITE,
-                                         MAP_SHARED | MAP_POPULATE, file_info_.file_descriptor, 0));
+    reinterpret_cast<std::byte *>(mmap(0, file_info_.file_size, PROT_READ | PROT_WRITE,
+                                       MAP_SHARED | MAP_POPULATE, file_info_.file_descriptor, 0));
 
   if(buffer == MAP_FAILED)
   {
     throw std::system_error(errno, std::generic_category(),
                             "Error memory mapping and allocating a block for file data at " +
-                                path_);
+                              path_);
   }
 
   data_ = std::span<std::byte>(buffer, static_cast<size_t>(file_info_.file_size));

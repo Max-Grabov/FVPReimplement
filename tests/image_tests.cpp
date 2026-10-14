@@ -32,23 +32,23 @@ TEST(StreamTest, TestGetImage)
   View g_view("./AstralAirData/graph.bin");
 
   std::vector<std::byte> vis_query =
-      vis_view.Read(8 + vis_view.Read<uint32_t, std::endian::big>(0) * 12 +
-                        vis_view.Read<uint32_t, std::endian::big>(8),
-                    9);
+    vis_view.Read(8 + vis_view.Read<uint32_t, std::endian::big>(0) * 12 +
+                    vis_view.Read<uint32_t, std::endian::big>(8),
+                  9);
   std::vector<std::byte> sd_query =
-      sd_view.Read(8 + sd_view.Read<uint32_t, std::endian::big>(0) * 12 +
-                       sd_view.Read<uint32_t, std::endian::big>(8),
-                   7);
+    sd_view.Read(8 + sd_view.Read<uint32_t, std::endian::big>(0) * 12 +
+                   sd_view.Read<uint32_t, std::endian::big>(8),
+                 7);
   std::vector<std::byte> bg_query =
-      bg_view.Read(8 + bg_view.Read<uint32_t, std::endian::big>(0) * 12 +
-                       bg_view.Read<uint32_t, std::endian::big>(8),
-                   9);
+    bg_view.Read(8 + bg_view.Read<uint32_t, std::endian::big>(0) * 12 +
+                   bg_view.Read<uint32_t, std::endian::big>(8),
+                 9);
   std::vector<std::byte> bs_query =
-      bs_view.Read(8 + bs_view.Read<uint32_t, std::endian::big>(0) * 12 +
-                       bs_view.Read<uint32_t, std::endian::big>(8),
-                   17);
+    bs_view.Read(8 + bs_view.Read<uint32_t, std::endian::big>(0) * 12 +
+                   bs_view.Read<uint32_t, std::endian::big>(8),
+                 17);
   std::vector<std::byte> g_query = g_view.Read(8 + g_view.Read<uint32_t, std::endian::big>(0) * 12 +
-                                                   g_view.Read<uint32_t, std::endian::big>(8),
+                                                 g_view.Read<uint32_t, std::endian::big>(8),
                                                8);
 
   std::vector<std::byte> vis_data = vis_bin.GetChunk(vis_query);

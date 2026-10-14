@@ -122,7 +122,7 @@ public:
     if(properties_.permissions < Permissions::READ_WRITE)
     {
       throw no_write_allowed_exception(
-          "Attempted to write to a file open in read only mode! Path is: " + path_);
+        "Attempted to write to a file open in read only mode! Path is: " + path_);
     }
 
     try

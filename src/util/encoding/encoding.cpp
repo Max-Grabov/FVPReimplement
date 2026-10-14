@@ -40,8 +40,8 @@ std::vector<std::byte> ConvertShiftJISToUTF8String(std::span<const std::byte> st
     {
       // Prevents endianness needing to be checked for systems.
       code_point = GetUTFCodePointFrom2ByteShiftJISValue(
-          static_cast<uint16_t>((reinterpret_cast<const uint8_t *>(stream.data())[i] << 8) +
-                                reinterpret_cast<const uint8_t *>(stream.data())[i + 1]));
+        static_cast<uint16_t>((reinterpret_cast<const uint8_t *>(stream.data())[i] << 8) +
+                              reinterpret_cast<const uint8_t *>(stream.data())[i + 1]));
       i++;
     }
 

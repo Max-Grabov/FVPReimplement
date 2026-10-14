@@ -1,8 +1,7 @@
-#include <bit>
 #include <vector>
 
-#include "engine/backlog_entry.hpp"
-#include "engine/save_information.hpp"
+#include "backlog_entry.hpp"
+#include "save_information.hpp"
 #include "image/image.hpp"
 #include "util/container/fixed_stack.hpp"
 #include "util/file/mapped_file.hpp"

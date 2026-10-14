@@ -17,14 +17,14 @@ RenderWindow::RenderWindow(std::string_view window_name, int width_resolution,
                            int height_resolution, int window_options)
 {
   window_ =
-      SDL_CreateWindow(window_name.data(), width_resolution, height_resolution, window_options);
+    SDL_CreateWindow(window_name.data(), width_resolution, height_resolution, window_options);
 
   if(!window_)
   {
     throw std::runtime_error(
-        "Error creating SDL Window with name: " + std::string(window_name.data()) +
-        ", and resolution " + std::to_string(width_resolution) + "x" +
-        std::to_string(height_resolution));
+      "Error creating SDL Window with name: " + std::string(window_name.data()) +
+      ", and resolution " + std::to_string(width_resolution) + "x" +
+      std::to_string(height_resolution));
   }
 
   renderer_ = SDL_CreateRenderer(window_, NULL);
